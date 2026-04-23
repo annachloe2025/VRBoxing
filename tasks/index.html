@@ -532,7 +532,7 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        事前準備フェーズ
+        ボクシング実装フェーズ ← 🎯いまここ
       
     </span>
   </a>
@@ -543,7 +543,7 @@
   <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        次にやる（上記が終わったら）
+        体のケア（並行）
       
     </span>
   </a>
@@ -1273,7 +1273,7 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        事前準備フェーズ
+        ボクシング実装フェーズ ← 🎯いまここ
       
     </span>
   </a>
@@ -1284,7 +1284,7 @@
   <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        次にやる（上記が終わったら）
+        体のケア（並行）
       
     </span>
   </a>
@@ -1352,43 +1352,18 @@
 <h1 id="_1">いまのタスク<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
 <p>アクティブなタスクと完了したタスクを追跡するページ。</p>
 <h2 id="_2">🟢 アクティブ（現在取り組んでいる）<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<h3 id="_3">事前準備フェーズ<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<h3 id="_3">ボクシング実装フェーズ ← 🎯いまここ<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
 <ul class="task-list">
-<li class="task-list-item">
-<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Unity Hub をダウンロード・インストール</strong><br />
-    URL: <a href="https://unity.com/download">https://unity.com/download</a><br />
-    優先度: 高（これがないと始まらない）<br />
-    所要時間: 30分〜1時間（ダウンロード含む）</p>
-</li>
-<li class="task-list-item">
-<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Unity エディタ（2022.3 LTS or Unity 6 LTS）をインストール</strong><br />
-    Unity Hub から入れる<br />
-    オプション: Windows Build Support、Visual Studio Community<br />
-    所要時間: 1〜2時間（ダウンロードが大きい）</p>
-</li>
-<li class="task-list-item">
-<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Valve Index + SteamVR の動作確認</strong><br />
-    SteamVR が起動して Index が正常にトラッキングされるか<br />
-    Knuckles コントローラーが認識されるか</p>
-</li>
-<li class="task-list-item">
-<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Knuckles 用の手首ストラップを用意</strong><br />
-    優先度: 高（安全のため、ボクシングは激しく振る）<br />
-    純正ストラップ＋サードパーティの「Knuckle Straps」などが安心</p>
-</li>
-<li class="task-list-item">
-<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>女性キャラを1体用意する</strong><br />
-    選択肢A: VRoid Studio でアニメ調を自作<br />
-    選択肢B: Mixamo でリアル調をダウンロード<br />
-    まず1体だけ。好みの方向性を見極めるため</p>
-</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 両手のコントローラーに「拳」コライダーを付ける</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> パンチ速度を測って、閾値以上で「殴った」判定を出す</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> キャラ（またはサンドバッグ）を殴った時のリアクション（のけぞり・効果音）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 初めて「女性キャラを殴れた」状態を達成 🎉</li>
 </ul>
-<h3 id="_4">次にやる（上記が終わったら）<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<h3 id="_4">体のケア（並行）<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Unity 新規プロジェクト作成（場所: <code>03_Unity_Project/VRBoxing</code>）</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> XR Plugin Management + OpenXR Plugin + XR Interaction Toolkit をインストール</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Valve Index Controller Profile を OpenXR 設定に追加</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> シーンに XR Origin を配置、VR で立てる状態を確認</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Knuckles 用の手首ストラップを用意</strong><br />
+    優先度: 高（安全のため、ボクシングは激しく振る）<br />
+    純正ストラップ＋サードパーティの「Knuckle Straps」などが安心</li>
 </ul>
 <h2 id="_5">✅ 完了<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
@@ -1401,6 +1376,16 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>2026-04-23</strong> GitHub Pages 公開</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>2026-04-23</strong> update.bat で更新を自動化</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>2026-04-23</strong> Docsify → MkDocs + Material へ移行</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>2026-04-23</strong> MkDocs テーマ調整（ヘッダー深めローズ、ダーク背景をピンク寄りの柔らかい色に）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>2026-04-23</strong> Unity Hub 確認（2022.3 と 6.2 インストール済み）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>2026-04-23</strong> Unity 2022.3.62f1 LTS で VR テンプレート使って新規プロジェクト作成</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>2026-04-23</strong> OpenXR + XR Interaction Toolkit セットアップ（VR テンプレで自動完了）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>2026-04-23</strong> Valve Index Controller Profile 追加確認（VR テンプレで自動登録済み）</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>2026-04-23</strong> <strong>SteamVR 起動 → Unity Play → Valve Index で SampleScene に入れることを確認</strong> 🎉</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>2026-04-23</strong> VRoid Studio で最初の女性キャラを作成・VRM エクスポート</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>2026-04-23</strong> UniVRM 0.x インストール、VRM を VRM 0.x 形式（テクスチャ2048）で書き出し直して取り込み成功</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>2026-04-23</strong> キャラを <code>Assets/_Project/Characters/</code> に整理、Prefab をシーンに配置</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>2026-04-23</strong> <strong>VR 内で自作の女性キャラを目の前に立たせることに成功</strong> 🎯🎉</li>
 </ul>
 <h2 id="_6">💡 アイデア保管庫（いつかやりたい）<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
 <ul>

@@ -4,37 +4,18 @@
 
 ## 🟢 アクティブ（現在取り組んでいる）
 
-### 事前準備フェーズ
+### ボクシング実装フェーズ ← 🎯いまここ
 
-- [ ] **Unity Hub をダウンロード・インストール**  
-    URL: <https://unity.com/download>  
-    優先度: 高（これがないと始まらない）  
-    所要時間: 30分〜1時間（ダウンロード含む）
+- [ ] 両手のコントローラーに「拳」コライダーを付ける
+- [ ] パンチ速度を測って、閾値以上で「殴った」判定を出す
+- [ ] キャラ（またはサンドバッグ）を殴った時のリアクション（のけぞり・効果音）
+- [ ] 初めて「女性キャラを殴れた」状態を達成 🎉
 
-- [ ] **Unity エディタ（2022.3 LTS or Unity 6 LTS）をインストール**  
-    Unity Hub から入れる  
-    オプション: Windows Build Support、Visual Studio Community  
-    所要時間: 1〜2時間（ダウンロードが大きい）
-
-- [ ] **Valve Index + SteamVR の動作確認**  
-    SteamVR が起動して Index が正常にトラッキングされるか  
-    Knuckles コントローラーが認識されるか
+### 体のケア（並行）
 
 - [ ] **Knuckles 用の手首ストラップを用意**  
     優先度: 高（安全のため、ボクシングは激しく振る）  
     純正ストラップ＋サードパーティの「Knuckle Straps」などが安心
-
-- [ ] **女性キャラを1体用意する**  
-    選択肢A: VRoid Studio でアニメ調を自作  
-    選択肢B: Mixamo でリアル調をダウンロード  
-    まず1体だけ。好みの方向性を見極めるため
-
-### 次にやる（上記が終わったら）
-
-- [ ] Unity 新規プロジェクト作成（場所: `03_Unity_Project/VRBoxing`）
-- [ ] XR Plugin Management + OpenXR Plugin + XR Interaction Toolkit をインストール
-- [ ] Valve Index Controller Profile を OpenXR 設定に追加
-- [ ] シーンに XR Origin を配置、VR で立てる状態を確認
 
 ## ✅ 完了
 
@@ -47,6 +28,16 @@
 - [x] **2026-04-23** GitHub Pages 公開
 - [x] **2026-04-23** update.bat で更新を自動化
 - [x] **2026-04-23** Docsify → MkDocs + Material へ移行
+- [x] **2026-04-23** MkDocs テーマ調整（ヘッダー深めローズ、ダーク背景をピンク寄りの柔らかい色に）
+- [x] **2026-04-23** Unity Hub 確認（2022.3 と 6.2 インストール済み）
+- [x] **2026-04-23** Unity 2022.3.62f1 LTS で VR テンプレート使って新規プロジェクト作成
+- [x] **2026-04-23** OpenXR + XR Interaction Toolkit セットアップ（VR テンプレで自動完了）
+- [x] **2026-04-23** Valve Index Controller Profile 追加確認（VR テンプレで自動登録済み）
+- [x] **2026-04-23** **SteamVR 起動 → Unity Play → Valve Index で SampleScene に入れることを確認** 🎉
+- [x] **2026-04-23** VRoid Studio で最初の女性キャラを作成・VRM エクスポート
+- [x] **2026-04-23** UniVRM 0.x インストール、VRM を VRM 0.x 形式（テクスチャ2048）で書き出し直して取り込み成功
+- [x] **2026-04-23** キャラを `Assets/_Project/Characters/` に整理、Prefab をシーンに配置
+- [x] **2026-04-23** **VR 内で自作の女性キャラを目の前に立たせることに成功** 🎯🎉
 
 ## 💡 アイデア保管庫（いつかやりたい）
 

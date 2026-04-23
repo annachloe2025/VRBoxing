@@ -886,6 +886,78 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#2026-04-24-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2026-04-24 — ステップ1 完了の日 🥊🎉
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2026-04-24 — ステップ1 完了の日 🥊🎉">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        やったこと
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        詰まったところ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VR 内での手応え
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        メモ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        次やること（演出・調整フェーズ）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1512,6 +1584,78 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#2026-04-24-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2026-04-24 — ステップ1 完了の日 🥊🎉
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2026-04-24 — ステップ1 完了の日 🥊🎉">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        やったこと
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        詰まったところ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VR 内での手応え
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        メモ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        次やること（演出・調整フェーズ）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1650,6 +1794,66 @@
 <li>コントローラーの速度を取ってしきい値以上で「殴った」判定</li>
 <li>殴った時のリアクション（のけぞりアニメ or ヒットエフェクト + 効果音）</li>
 <li>ここまで出来ると「初めて女性キャラを殴れた」瞬間が来る 🥊</li>
+</ul>
+<hr />
+<h2 id="2026-04-24-1">2026-04-24 — ステップ1 完了の日 🥊🎉<a class="headerlink" href="#2026-04-24-1" title="Permanent link">&para;</a></h2>
+<h3 id="_12">やったこと<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>コライダーのセットアップ</strong>:<ul>
+<li>キャラのルートに Capsule Collider（Center Y=0.9, Height=1.8, Radius=0.25）</li>
+<li>両手の Controller の子に <code>Fist</code> という空オブジェクトを作成、Sphere Collider (Trigger, Radius=0.08) + Kinematic Rigidbody</li>
+</ul>
+</li>
+<li><strong><code>PunchDetector.cs</code> の実装</strong>（<code>Assets/Scripts/PunchDetector.cs</code>）:<ul>
+<li><code>FixedUpdate</code> で前フレームとの位置差から速度を計算（Transform 移動のコントローラーは Rigidbody.velocity 使えないため）</li>
+<li><code>minPunchVelocity</code>（既定 1.5 m/s）以上の衝突でパンチ判定</li>
+<li>最初の1フレームは <code>prevPosition=(0,0,0)</code> の影響で速度が爆発するため初期化フラグでスキップ</li>
+<li><code>HitReceiver</code> を持つ相手だけ有効にして誤検出を排除（自分の XR Rig を殴ってしまう問題の解決）</li>
+</ul>
+</li>
+<li><strong><code>HitReceiver.cs</code> の実装</strong>（<code>Assets/Scripts/HitReceiver.cs</code>）:<ul>
+<li><code>TakeHit(velocity, speed)</code> でコルーチンののけぞりアニメ起動</li>
+<li>水平成分のみ使ってキャラが倒れないように</li>
+<li>速度に応じてのけぞり距離をスケール（1.5 m/s 相当で等倍、強く殴るほど大きく反応）</li>
+<li><code>AudioSource</code> と <code>hitSound</code> のフック（音は後で差し替え可能）</li>
+</ul>
+</li>
+</ul>
+<h3 id="_13">詰まったところ<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>初期化時に 65 m/s の幻パンチ</strong>が1発出る<ul>
+<li>原因: <code>Start()</code> 前の <code>prevPosition</code> が初期値のまま、初回の <code>FixedUpdate</code> で一気に吹っ飛ぶ</li>
+<li>解決: <code>initialized</code> フラグで初回の <code>FixedUpdate</code> をスキップする</li>
+</ul>
+</li>
+<li><strong>自分の XR Rig (<code>XR Origin (XR Rig)</code>) を殴ってしまう誤検出</strong><ul>
+<li>原因: XR Origin 自体にコライダーがあり、Fist の Trigger が反応してた</li>
+<li>解決: <code>OnTriggerEnter</code> で <code>HitReceiver</code> を持たない相手は無視するように</li>
+</ul>
+</li>
+<li><strong>キャラのルートが一瞬分かりづらい</strong>（VRM は中に <code>Root</code> ボーンがあるため）<ul>
+<li>正解は「Prefab インスタンスのトップ（Capsule Collider を付けた GameObject）」</li>
+</ul>
+</li>
+</ul>
+<h3 id="vr">VR 内での手応え<a class="headerlink" href="#vr" title="Permanent link">&para;</a></h3>
+<ul>
+<li>両手でパンチ連打、速度 1.5〜5.8 m/s のレンジで判定</li>
+<li>強く殴るほど大きくのけぞる</li>
+<li>小さい動きは「軽く触れた」扱いになってパンチ扱いされない（リアル挙動）</li>
+</ul>
+<h3 id="_14">メモ<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<ul>
+<li>認知負荷対策として、スクリプト作成は Claude 側で直接 <code>Assets/Scripts/</code> に書き込み、ユーザーは <strong>Inspector にドラッグ or Add Component の1操作のみ</strong>で済むフローにした</li>
+</ul>
+<h3 id="_15">次やること（演出・調整フェーズ）<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<ul>
+<li>ヒットエフェクト（パーティクル）</li>
+<li>ヒット音（AudioClip を拾ってきて <code>HitReceiver.hitSound</code> に設定）</li>
+<li>パンチカウンター／消費カロリー表示（UI）</li>
+<li>キャラの待機アニメ（ブレスとか、立ち姿のリアル感）</li>
+<li>のけぞり方向の改良（殴った部位で方向が変わるように）</li>
+<li>手を拳の見た目にする（今はコントローラーのまま）</li>
 </ul>
 
 

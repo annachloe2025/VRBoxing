@@ -1,0 +1,31 @@
+/* ============================================================
+   VRBoxing - theme tweaks
+   - ライトモード: ヘッダーのピンクを深みのあるローズに
+   - ダークモード: 真っ黒ではなく、ピンク寄りの柔らかいダークに
+   ============================================================ */
+
+/* --- ライトモード --- */
+:root {
+  --md-primary-fg-color: #AD1457;          /* 深めのローズ（派手なピンク回避） */
+  --md-primary-fg-color--light: #C2185B;
+  --md-primary-fg-color--dark: #880E4F;
+  --md-accent-fg-color: #C2185B;
+}
+
+/* --- ダークモード --- */
+[data-md-color-scheme="slate"] {
+  /* グレーの基調色をピンク寄りに（純粋な青灰色→温かい色合い） */
+  --md-hue: 340;
+
+  /* 背景を「ほぼ真っ黒(14%)」から「柔らかいダーク(19%)」へ */
+  --md-default-bg-color:          hsla(340, 15%, 19%, 1);
+  --md-default-bg-color--light:   hsla(340, 15%, 23%, 0.54);
+  --md-default-bg-color--lighter: hsla(340, 15%, 27%, 0.26);
+  --md-default-bg-color--lightest:hsla(340, 15%, 30%, 0.07);
+
+  /* ヘッダー側も落ち着いた深いローズ */
+  --md-primary-fg-color: #880E4F;
+  --md-primary-fg-color--light: #AD1457;
+  --md-primary-fg-color--dark:  #560027;
+  --md-accent-fg-color: #EC407A;
+}

@@ -1,0 +1,98 @@
+site_name: VRBoxing
+site_description: Valve Index 向け VR ボクシング／フィットネスゲームの個人開発プロジェクト
+site_url: https://annachloe2025.github.io/VRBoxing/
+repo_url: https://github.com/annachloe2025/VRBoxing
+repo_name: annachloe2025/VRBoxing
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: ja
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - navigation.indexes
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.tabs.link
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: pink
+      accent: pink
+      toggle:
+        icon: material/weather-night
+        name: ダークモードに切替
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: pink
+      accent: pink
+      toggle:
+        icon: material/weather-sunny
+        name: ライトモードに切替
+  icon:
+    repo: fontawesome/brands/github
+  font:
+    text: Noto Sans JP
+    code: JetBrains Mono
+
+plugins:
+  - search:
+      lang: ja
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - def_list
+  - abbr
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - toc:
+      permalink: true
+      toc_depth: 3
+
+nav:
+  - ホーム: index.md
+  - いまのタスク: tasks.md
+  - 開発ステップ:
+      - ステップ1 殴れる女性キャラ: steps/step1.md
+  - 設計・ログ:
+      - ゲーム設計メモ: design/notes.md
+      - 開発ログ: design/dev-log.md
+  - 技術・環境構築:
+      - Unity プロジェクト: tech/unity.md
+      - GitHub セットアップ: tech/github-setup.md
+      - ドキュメントサイト運用: tech/docs-site-guide.md
+  - 素材管理:
+      - 素材全体ルール: assets/overview.md
+      - キャラクター素材: assets/characters.md
+  - その他:
+      - 参考資料: misc/reference.md
+      - ビルド: misc/builds.md
+      - バックアップ: misc/backups.md
+
+copyright: "&copy; 2026 annachloe2025"
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/annachloe2025/VRBoxing

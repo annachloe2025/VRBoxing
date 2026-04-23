@@ -119,3 +119,53 @@
 - コントローラーの速度を取ってしきい値以上で「殴った」判定
 - 殴った時のリアクション（のけぞりアニメ or ヒットエフェクト + 効果音）
 - ここまで出来ると「初めて女性キャラを殴れた」瞬間が来る 🥊
+
+---
+
+## 2026-04-24 — ステップ1 完了の日 🥊🎉
+
+### やったこと
+
+- **コライダーのセットアップ**:
+    - キャラのルートに Capsule Collider（Center Y=0.9, Height=1.8, Radius=0.25）
+    - 両手の Controller の子に `Fist` という空オブジェクトを作成、Sphere Collider (Trigger, Radius=0.08) + Kinematic Rigidbody
+- **`PunchDetector.cs` の実装**（`Assets/Scripts/PunchDetector.cs`）:
+    - `FixedUpdate` で前フレームとの位置差から速度を計算（Transform 移動のコントローラーは Rigidbody.velocity 使えないため）
+    - `minPunchVelocity`（既定 1.5 m/s）以上の衝突でパンチ判定
+    - 最初の1フレームは `prevPosition=(0,0,0)` の影響で速度が爆発するため初期化フラグでスキップ
+    - `HitReceiver` を持つ相手だけ有効にして誤検出を排除（自分の XR Rig を殴ってしまう問題の解決）
+- **`HitReceiver.cs` の実装**（`Assets/Scripts/HitReceiver.cs`）:
+    - `TakeHit(velocity, speed)` でコルーチンののけぞりアニメ起動
+    - 水平成分のみ使ってキャラが倒れないように
+    - 速度に応じてのけぞり距離をスケール（1.5 m/s 相当で等倍、強く殴るほど大きく反応）
+    - `AudioSource` と `hitSound` のフック（音は後で差し替え可能）
+
+### 詰まったところ
+
+- **初期化時に 65 m/s の幻パンチ**が1発出る
+    - 原因: `Start()` 前の `prevPosition` が初期値のまま、初回の `FixedUpdate` で一気に吹っ飛ぶ
+    - 解決: `initialized` フラグで初回の `FixedUpdate` をスキップする
+- **自分の XR Rig (`XR Origin (XR Rig)`) を殴ってしまう誤検出**
+    - 原因: XR Origin 自体にコライダーがあり、Fist の Trigger が反応してた
+    - 解決: `OnTriggerEnter` で `HitReceiver` を持たない相手は無視するように
+- **キャラのルートが一瞬分かりづらい**（VRM は中に `Root` ボーンがあるため）
+    - 正解は「Prefab インスタンスのトップ（Capsule Collider を付けた GameObject）」
+
+### VR 内での手応え
+
+- 両手でパンチ連打、速度 1.5〜5.8 m/s のレンジで判定
+- 強く殴るほど大きくのけぞる
+- 小さい動きは「軽く触れた」扱いになってパンチ扱いされない（リアル挙動）
+
+### メモ
+
+- 認知負荷対策として、スクリプト作成は Claude 側で直接 `Assets/Scripts/` に書き込み、ユーザーは **Inspector にドラッグ or Add Component の1操作のみ**で済むフローにした
+
+### 次やること（演出・調整フェーズ）
+
+- ヒットエフェクト（パーティクル）
+- ヒット音（AudioClip を拾ってきて `HitReceiver.hitSound` に設定）
+- パンチカウンター／消費カロリー表示（UI）
+- キャラの待機アニメ（ブレスとか、立ち姿のリアル感）
+- のけぞり方向の改良（殴った部位で方向が変わるように）
+- 手を拳の見た目にする（今はコントローラーのまま）

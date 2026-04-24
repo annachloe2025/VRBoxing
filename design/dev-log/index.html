@@ -1102,6 +1102,78 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#2026-04-243_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2026-04-24（その3）— 待機アニメ適用
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2026-04-24（その3）— 待機アニメ適用">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        やったこと
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_26" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        詰まったところ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        メモ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参考URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        次やること
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1944,6 +2016,78 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#2026-04-243_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2026-04-24（その3）— 待機アニメ適用
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2026-04-24（その3）— 待機アニメ適用">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        やったこと
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_26" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        詰まったところ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        メモ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参考URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        次やること
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2263,6 +2407,71 @@
 <li>パンチカウンター / カロリー表示（UI）</li>
 <li>拳が空を切るときの音（スッ、ヒュッ）</li>
 <li>のけぞり方向の改良（部位で変える）</li>
+</ul>
+<hr />
+<h2 id="2026-04-243_1">2026-04-24（その3）— 待機アニメ適用<a class="headerlink" href="#2026-04-243_1" title="Permanent link">&para;</a></h2>
+<h3 id="_25">やったこと<a class="headerlink" href="#_25" title="Permanent link">&para;</a></h3>
+<ul>
+<li>VRoid キャラに Mixamo の Idle アニメを適用するパイプラインを構築<ul>
+<li><strong>VRoid (VRM)</strong> → Blender（VRM Addon for Blender）で読み込み</li>
+<li>Body/Face/Hair のみ選択 → <strong>メッシュ限定 FBX</strong> 書き出し（スケール 1.0, -Z Forward / Y Up）</li>
+<li>Mixamo にアップロード → Auto-Rigger（5マーカー配置）でリギング</li>
+<li>Idle アニメ選択 → <strong>FBX for Unity / Without Skin / 30fps</strong> で DL</li>
+<li>Unity の <code>Assets/_Project/Animations/</code> に配置（旧 xbot アニメは削除）</li>
+</ul>
+</li>
+<li>Unity 側でアニメ Clip を調整して<strong>正面向き＋その場待機</strong>に<ul>
+<li><code>boxing_Idle.fbx</code> → Inspector → Animation タブ</li>
+<li>Root Transform Rotation: ✅ Bake Into Pose / Based Upon: <strong>Original</strong></li>
+<li>Root Transform Position (Y) / (XZ): ✅ Bake Into Pose</li>
+<li>Apply</li>
+</ul>
+</li>
+</ul>
+<h3 id="_26">詰まったところ<a class="headerlink" href="#_26" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Blender 5.0 で VRM Addon のインポート時 TypeError</strong><ul>
+<li>Extensions.blender.org 版が Blender 5.0 未対応（承認ラグ）</li>
+<li>解決: Extensions 版を無効化 → GitHub から最新 zip をレガシー Add-on として導入</li>
+</ul>
+</li>
+<li><strong>Unity FBX Exporter での書き出しが Mixamo で Auto-Rig エラー</strong><ul>
+<li><code>ERROR occured on animate: Unknown error while generating motion</code></li>
+<li>原因: VRoid 由来の余計なボーンがアーマチュアに残って Mixamo が混乱</li>
+<li>解決: Unity ルートを捨て、Blender でメッシュ限定 FBX にする方式へ切替</li>
+</ul>
+</li>
+<li><strong>Mixamo Auto-Rig の「Please place all markers」</strong><ul>
+<li>原因: 5つのマーカー（あご / 手首 L / R / ひじ L / R）全部をキャラに配置する前に Next を押していた</li>
+</ul>
+</li>
+<li><strong>Unity でキャラが横を向く</strong><ul>
+<li>原因: Mixamo 出力 FBX のルートに Y 回転が乗っていた</li>
+<li>解決: Root Transform Rotation を Original + Bake Into Pose（上記の通り）</li>
+</ul>
+</li>
+</ul>
+<h3 id="_27">メモ<a class="headerlink" href="#_27" title="Permanent link">&para;</a></h3>
+<ul>
+<li>微妙にまだ体軸が傾いてるが、演出調整フェーズで詰まっても困るので <strong>ここでは妥協</strong><ul>
+<li>後で気になれば Animation の Offset 値で微調整可能（0 → ±数度）</li>
+</ul>
+</li>
+<li>Characters フォルダのファイル役割を整理：<code>.blend</code>（編集用）/ <code>.fbx</code>（Mixamo 再アップ用）/ <code>.vrm</code>（Unity 取り込み）/ <code>.vroid</code>（VRoid 編集用）</li>
+<li><code>.blend1</code>（Blender 自動バックアップ）は <code>.gitignore</code> に追加済みだが、ディスク上のゴミは手動削除した</li>
+</ul>
+<h3 id="url">参考URL<a class="headerlink" href="#url" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://zenn.dev/daichi_gamedev/articles/feec966b92d59a">Mixamoのアニメーションの挙動がおかしくなる時の解決方法 - Zenn</a></li>
+<li><a href="https://qiita.com/kazuma_f/items/76686bc5b23ffd8f75ca">MixamoのアニメーションをUnityに取り込んで動きが変だった時の対処 - Qiita</a></li>
+<li><a href="https://zenn.dev/omini/articles/b8218b83b18b41">VroidアバターにMixamoアニメーションを適用する - Zenn</a></li>
+</ul>
+<h3 id="_28">次やること<a class="headerlink" href="#_28" title="Permanent link">&para;</a></h3>
+<ul>
+<li>パンチカウンター / カロリー表示（UI）← 次</li>
+<li>拳が空を切るときの音（スッ、ヒュッ）</li>
+<li>のけぞり方向の改良（部位で変える）</li>
+<li>傾きが気になるようなら Offset 微調整でリトライ</li>
 </ul>
 
 

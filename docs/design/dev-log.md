@@ -169,3 +169,106 @@
 - キャラの待機アニメ（ブレスとか、立ち姿のリアル感）
 - のけぞり方向の改良（殴った部位で方向が変わるように）
 - 手を拳の見た目にする（今はコントローラーのまま）
+
+---
+
+## 2026-04-24（その2）— 演出フェーズ1日目
+
+### やったこと
+
+- **サンプル部屋をボクシングリングに置き換え** 🥊
+    - `Assets/Editor/BoxingRingCreator.cs` を実装
+    - Unity メニュー `VRBoxing > Create Boxing Ring` で一発生成
+    - 6m × 6m のキャンバス + 4本のポスト + 12本のロープ（3段 × 4辺）
+    - URP / Built-in 両対応のマテリアルを自動生成（`Assets/Materials/Ring/`）
+    - `Delete Boxing Ring` メニューも用意（やり直し可）
+- **ヒット音のバリエーション化**:
+    - `HitReceiver.GenerateHitSoundPool()` で 5 種類の被弾音をパラメータ（基音周波数 70〜110Hz、減衰速度、ノイズ量、長さ）をランダムに振って生成
+    - 直前と違うインデックスを優先して選ぶ「同音連続回避」ロジック
+    - 再生時にピッチを ±0.12 半音揺らし + 強く殴るほど少し高めに（毎回音が違って聞こえる）
+- **ヒットエフェクト（パーティクル）**:
+    - `Assets/Scripts/HitEffect.cs` を実装
+    - `HitReceiver.Awake()` で `AddComponent<HitEffect>()` するので、ユーザー操作は完全に不要
+    - `PunchDetector` が `other.ClosestPoint(拳の位置)` で命中座標を計算し、`HitReceiver.TakeHit(vel, speed, hitPoint)` に渡す
+    - 命中位置で **小さい白い丸粒が 50〜120個ランダムに弾ける**
+    - ParticleSystem / マテリアル / テクスチャを全て実行時に自動生成（事前セットアップゼロ）
+
+### 詰まったところ
+
+- **AddComponent 直後の ParticleSystem は自動再生中**
+    - `Setting the duration while system is still playing` エラーが出て一部設定が弾かれる
+    - 解決: `ps.Stop(true, StopEmittingAndClear)` を直後に呼んで完全停止してから設定変更
+- **`Resources.GetBuiltinResource<Texture2D>("Default-Particle.psd")` が返ってこない**
+    - Unity バージョン・パッケージ構成で取れないことがある
+    - 解決: 64×64 の柔らかい円テクスチャを `SetPixel` で実行時自作
+- **URP でパーティクルが四角く表示される**
+    - `_Surface = 1` にするだけでは透過モードに入らない
+    - 解決: `_SURFACE_TYPE_TRANSPARENT` キーワードを `EnableKeyword` + `_SrcBlend` / `_DstBlend` / `_ZWrite` を明示
+
+### 最終的な HitEffect パラメータ（VR 内の手応えで決めた）
+
+- 粒数: 50〜120 のランダム
+- 大きさ: 5〜13mm（かなり細かい）
+- 初速: 1.5 m/s（広がりすぎない）
+- 寿命: 0.1〜0.22 秒（短くシャープに）
+
+### メモ
+
+- 3 つの「演出」（リング・音バリエーション・パーティクル）が揃って、**VR 内での「殴ってる感」がぐっと本物に近づいた**
+- すべて自動生成 or メニューから1クリックで済む設計。ユーザーの Unity Editor 操作は最小限
+
+### 次やること
+
+- **拳の見た目（グローブ化）**: 今はコントローラー素のままなので、赤いボクシンググローブっぽい形に差し替え
+- 待機アニメ（Mixamo）
+- パンチカウンター UI
+
+---
+
+## 2026-04-24（その3: グローブ装着の仕組み）
+
+### やったこと
+
+- **ボクシンググローブの装着システム**を実装
+    - `GloveProfile` (ScriptableObject): モデルごとの装着設定（スケール・回転・位置・メッシュ選択・左右振り分け）を1アセットに収めた
+    - `GloveEquipper` (Editor): 両手の `PunchDetector` を自動検出して、プロファイルに従ってグローブをインスタンス化
+    - `GloveEquipperWindow` (Editor): メニュー `VRBoxing > Equip Gloves From Profile...` で GUI から装着・取り外し
+    - 片手（Lのみ）モデルを右手にも使えるよう、**負スケール鏡映モード**を実装
+    - **左右別回転モード**を追加（鏡映だけでは向きが揃わないモデル向け、1段目 → 2段目の順で世界座標回転を適用）
+    - 使っているモデル: Sketchfab の無料ボクシンググローブ（片手の L.fbx、赤いレザー系）
+
+### 詰まったところ
+
+- **装着してもグローブが見えない**: Frustum culling で描画されていなかった
+    - 原因: FBX 由来メッシュの `bounds.size` がほぼ 0（sqrMagnitude ≈ 1.24e-05）
+    - 解決: `FixSourceMeshBoundsIfNeeded` でインポート時に `isReadable = true` にして `RecalculateBounds()`、さらに manual で 1m 立方に bounds を拡張（カリング回避）
+- **グローブが頭の上に出る**: モデルのピボットと頂点中心がズレていた（スケール 100 倍かけた分、小さなズレが大きく効いた）
+    - 最初の試み: `Renderer.bounds.center` を使った自動センタリング → 失敗（前段で bounds を (0,0,0) center に上書きしてた）
+    - 最終解決: `ComputeMeshVertexCenterWorld` で頂点データから直接センターを計算するよう変更
+- **手の向きが合わない**: 初期の共通 `rotationEuler = (-90, 0, 0)` では両手がおかしな向きに
+    - 解決: `useHandedRotation` フラグ + 左右別の2段階回転に変更
+    - 最終: **右手 Y+90°, 左手 Y-90°**（第2回転は無しでOKだった）
+- **positionOffset が効かない**: `AutoCenterOnFist` が offset を相殺していた
+    - 解決: 自動センタリングを先に実行 → そのあと positionOffset を `+=` で乗せる順序に変更
+
+### 最終設定（赤グローブ プリセット）
+
+- `scale = 100.0`（FBX が mm 単位級で小さすぎた）
+- `mirrorLeftFromSingleMesh = true`（片手 L モデルから右手を鏡映生成）
+- `useHandedRotation = true`
+- `rightRotationFirstEuler = (0, 90, 0)` / second 無し
+- `leftRotationFirstEuler = (0, -90, 0)` / second 無し
+- `positionOffset = (0, 0, -0.1)` — グローブを手首側に 10cm 引く
+
+### メモ
+
+- 新しいグローブを追加しても、このシステム（GloveProfile）で吸収できる設計にしてある
+- ただし「別モデルでも 0 コンフィグ」ではなく、スケール・回転・位置は毎回ある程度調整が必要
+- 一度プリセットを作ってしまえば、Remove → Equip のサイクルで即テスト可能
+
+### 次やること
+
+- 待機アニメ（キャラが立ちっぱなしで寂しい）
+- パンチカウンター / カロリー表示（UI）
+- 拳が空を切るときの音（スッ、ヒュッ）
+- のけぞり方向の改良（部位で変える）

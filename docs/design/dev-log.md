@@ -272,3 +272,56 @@
 - パンチカウンター / カロリー表示（UI）
 - 拳が空を切るときの音（スッ、ヒュッ）
 - のけぞり方向の改良（部位で変える）
+
+---
+
+## 2026-04-24（その3）— 待機アニメ適用
+
+### やったこと
+
+- VRoid キャラに Mixamo の Idle アニメを適用するパイプラインを構築
+    - **VRoid (VRM)** → Blender（VRM Addon for Blender）で読み込み
+    - Body/Face/Hair のみ選択 → **メッシュ限定 FBX** 書き出し（スケール 1.0, -Z Forward / Y Up）
+    - Mixamo にアップロード → Auto-Rigger（5マーカー配置）でリギング
+    - Idle アニメ選択 → **FBX for Unity / Without Skin / 30fps** で DL
+    - Unity の `Assets/_Project/Animations/` に配置（旧 xbot アニメは削除）
+- Unity 側でアニメ Clip を調整して**正面向き＋その場待機**に
+    - `boxing_Idle.fbx` → Inspector → Animation タブ
+    - Root Transform Rotation: ✅ Bake Into Pose / Based Upon: **Original**
+    - Root Transform Position (Y) / (XZ): ✅ Bake Into Pose
+    - Apply
+
+### 詰まったところ
+
+- **Blender 5.0 で VRM Addon のインポート時 TypeError**
+    - Extensions.blender.org 版が Blender 5.0 未対応（承認ラグ）
+    - 解決: Extensions 版を無効化 → GitHub から最新 zip をレガシー Add-on として導入
+- **Unity FBX Exporter での書き出しが Mixamo で Auto-Rig エラー**
+    - `ERROR occured on animate: Unknown error while generating motion`
+    - 原因: VRoid 由来の余計なボーンがアーマチュアに残って Mixamo が混乱
+    - 解決: Unity ルートを捨て、Blender でメッシュ限定 FBX にする方式へ切替
+- **Mixamo Auto-Rig の「Please place all markers」**
+    - 原因: 5つのマーカー（あご / 手首 L / R / ひじ L / R）全部をキャラに配置する前に Next を押していた
+- **Unity でキャラが横を向く**
+    - 原因: Mixamo 出力 FBX のルートに Y 回転が乗っていた
+    - 解決: Root Transform Rotation を Original + Bake Into Pose（上記の通り）
+
+### メモ
+
+- 微妙にまだ体軸が傾いてるが、演出調整フェーズで詰まっても困るので **ここでは妥協**
+    - 後で気になれば Animation の Offset 値で微調整可能（0 → ±数度）
+- Characters フォルダのファイル役割を整理：`.blend`（編集用）/ `.fbx`（Mixamo 再アップ用）/ `.vrm`（Unity 取り込み）/ `.vroid`（VRoid 編集用）
+- `.blend1`（Blender 自動バックアップ）は `.gitignore` に追加済みだが、ディスク上のゴミは手動削除した
+
+### 参考URL
+
+- [Mixamoのアニメーションの挙動がおかしくなる時の解決方法 - Zenn](https://zenn.dev/daichi_gamedev/articles/feec966b92d59a)
+- [MixamoのアニメーションをUnityに取り込んで動きが変だった時の対処 - Qiita](https://qiita.com/kazuma_f/items/76686bc5b23ffd8f75ca)
+- [VroidアバターにMixamoアニメーションを適用する - Zenn](https://zenn.dev/omini/articles/b8218b83b18b41)
+
+### 次やること
+
+- パンチカウンター / カロリー表示（UI）← 次
+- 拳が空を切るときの音（スッ、ヒュッ）
+- のけぞり方向の改良（部位で変える）
+- 傾きが気になるようなら Offset 微調整でリトライ

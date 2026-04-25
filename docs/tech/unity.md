@@ -1,13 +1,13 @@
 # Unity プロジェクト
 
-Unity プロジェクト本体のセットアップ手順。本体は `03_Unity_Project/` フォルダに置く。
+Unity プロジェクト本体のセットアップ手順。本体は `unity/` フォルダに置く。
 
 ## セットアップ手順
 
 1. Unity Hub を起動
 2. 「New project」→ **3D (Core)** テンプレートを選択
 3. プロジェクト名: `VRBoxing`
-4. **Location を必ずこのフォルダ** (`C:\Users\hoeho\Documents\Claude\VRBoxing\03_Unity_Project`) にする
+4. **Location を必ずこのフォルダ** (`C:\Users\hoeho\Documents\Claude\VRBoxing\unity`) にする
 5. Unity バージョンは **2022.3 LTS** または **Unity 6 LTS** を推奨
 
 ## 作成後にやること

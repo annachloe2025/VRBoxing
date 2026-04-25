@@ -1,11 +1,11 @@
 # ビルド
 
-`04_Builds/` にビルド済みの実行ファイル（.exe など）を置く。
+ビルド成果物（`.exe` など）は **`unity/Builds/`** に置く（Unity の標準的な置き場）。
 
 ## 推奨フォルダ命名
 
 ```
-Builds/
+unity/Builds/
 ├── 2026-04-30_v0.1_first_punch/     ← 日付_バージョン_ひとこと
 ├── 2026-05-15_v0.2_ai_idle/
 └── ...
@@ -26,5 +26,5 @@ Builds/
 ## 注意
 
 - ビルドデータは大きい（数百MB〜数GB）
-- `.gitignore` で `04_Builds/` は GitHub に上げない設定にしてある
-- 重要なものだけ `06_Backups` にコピーしてバックアップ
+- `unity/` フォルダ全体が `.gitignore` 対象なので **GitHub には自動的に上がらない**
+- 共有したいビルドは `refs/` 経由かクラウド（Google Drive / OneDrive 等）に置く

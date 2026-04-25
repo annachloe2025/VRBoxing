@@ -35,7 +35,7 @@
 
 ### Task 1-1: Unity プロジェクト作成
 
-- [ ] Unity Hub で新規3Dプロジェクト作成（場所: `03_Unity_Project/VRBoxing`）
+- [ ] Unity Hub で新規3Dプロジェクト作成（場所: `unity/VRBoxing`）
 - [ ] Package Manager から **XR Plugin Management** をインストール
 - [ ] **OpenXR Plugin** を有効化（PC向け）
 - [ ] **XR Interaction Toolkit** をインストール（VR操作の標準パッケージ）

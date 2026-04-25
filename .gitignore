@@ -72,17 +72,23 @@ Desktop.ini
 # プロジェクト固有
 # ============================================================
 
-# ビルド成果物（サイズが大きいので Git 管理しない）
-04_Builds/*
-!04_Builds/README.md
+# 重いバイナリ作業フォルダは Git 管理しない（ローカル限定）
+unity/
+blender/
+refs/
 
-# バックアップ（Git で履歴が残るのでバックアップは別管理）
-06_Backups/*
-!06_Backups/README.md
+# 旧フォルダ名（履歴削除後の保険）
+02_Assets_Source/
+03_Unity_Project/
+04_Builds/
+05_Reference/
+06_Backups/
 
-# 有料素材やライセンス制限のある素材
-# 必要に応じてここに追記する
-# 02_Assets_Source/Characters/Character_XX_有料/
+# .git バックアップフォルダ
+.git.backup*/
+
+# MkDocs ビルド成果物（再追加・既出と重複してても問題なし）
+site/
 
 # ============================================================
 # Blender 自動バックアップ

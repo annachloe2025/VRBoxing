@@ -1,44 +1,37 @@
 # バックアップ
 
-`06_Backups/` に定期バックアップを置く場所。
+## 基本方針（2026-04-26 改訂）
+
+**重いフォルダ（`unity/` `blender/` `refs/`）は Git 管理外** にした。
+そのため、これらの定期バックアップは **クラウド or 外付けストレージ** で取る運用にする。
+
+`docs/` と各種設定ファイル（`mkdocs.yml` `update.bat` `CLAUDE.md` 等）は `update.bat` のたびに GitHub に push されるので、**それ自体がバックアップ**として機能する。
 
 ## バックアップ対象の優先順位
 
 ### 最重要（絶対に失いたくない）
 
-- `docs/` のドキュメント
-- `03_Unity_Project/Assets/_Project/` の自作スクリプトとシーン
-- `02_Assets_Source/` の有料素材と自作素材
+- `unity/Assets/_Project/` の自作スクリプトとシーン
+- `blender/` の有料素材と自作キャラ素材
+- `docs/` のドキュメント（**GitHub に常時バックアップ済み**）
 
 ### 重要
 
-- `03_Unity_Project` 全体（ただし `Library/` と `Temp/` は除外していい）
+- `unity/` 全体（ただし `Library/` と `Temp/` は除外していい）
 
 ### 低優先
 
-- `04_Builds/`（再ビルドできるので最悪消えてもOK）
+- `unity/Builds/`（再ビルドできるので最悪消えてもOK）
 
-## バックアップ方法の推奨
+## おすすめのバックアップ方法
 
-手軽な順：
-
-1. **このフォルダに ZIP を置く**（日付付き）
-    - 例: `VRBoxing_backup_2026-04-30.zip`
-    - 週1回くらいのペースで
-2. **外付けHDD / USB メモリ**
-3. **クラウド**（Google Drive, OneDrive, Dropbox）
-4. **Git + GitHub**（ベストだが慣れが必要 → 既にこのプロジェクトで採用済み）
-
-## バックアップ命名規則
-
-```
-VRBoxing_backup_YYYY-MM-DD_vX.X.zip
-```
-
-例：
-
-- `VRBoxing_backup_2026-04-30_v0.1.zip`
-- `VRBoxing_backup_2026-05-15_v0.2.zip`
+1. **クラウド同期**（Google Drive / OneDrive / Dropbox）
+    - フォルダごと自動同期しておく
+    - 一度設定すれば手間ゼロ
+2. **外付けHDD / SSD**
+    - 月1回くらい手動コピー
+    - クラウドが落ちたとき用の保険
+3. **GitHub**（軽い `docs/` のみ自動的にバックアップ済み）
 
 ## バックアップの罠
 

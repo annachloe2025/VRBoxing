@@ -25,4 +25,4 @@ Valve Index 向けの VR ボクシング／フィットネスゲームの個人�
 - `update.bat` — 更新をワンクリックで完了するスクリプト
 - `CLAUDE.md` — AI アシスタント Claude がプロジェクトに入る際のコンテキスト
 
-その他の用途別フォルダ（`02_Assets_Source/`、`03_Unity_Project/` 等）は実データ用。詳しくは [ドキュメントサイト](https://annachloe2025.github.io/VRBoxing/) を見てください。
+その他の用途別フォルダ（`blender/`、`unity/` 等）は実データ用。詳しくは [ドキュメントサイト](https://annachloe2025.github.io/VRBoxing/) を見てください。

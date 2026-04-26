@@ -8,6 +8,8 @@ edit_uri: edit/main/docs/
 theme:
   name: material
   language: ja
+  logo: assets/icons/boxing-glove.svg
+  favicon: assets/icons/favicon-32.png
   features:
     - navigation.tabs
     - navigation.tabs.sticky

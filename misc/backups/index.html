@@ -20,7 +20,7 @@
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/icons/favicon-32.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
@@ -96,8 +96,7 @@
   <nav class="md-header__inner md-grid" aria-label="ヘッダー">
     <a href="../.." title="VRBoxing" class="md-header__button md-logo" aria-label="VRBoxing" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <img src="../../assets/icons/boxing-glove.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -400,8 +399,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="VRBoxing" class="md-nav__button md-logo" aria-label="VRBoxing" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <img src="../../assets/icons/boxing-glove.svg" alt="logo">
 
     </a>
     VRBoxing
@@ -1147,6 +1145,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#2026-04-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基本方針（2026-04-26 改訂）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1200,7 +1209,7 @@
   <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
-        バックアップ方法の推奨
+        おすすめのバックアップ方法
       
     </span>
   </a>
@@ -1209,17 +1218,6 @@
       
         <li class="md-nav__item">
   <a href="#_7" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        バックアップ命名規則
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         バックアップの罠
@@ -1272,6 +1270,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#2026-04-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基本方針（2026-04-26 改訂）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1325,7 +1334,7 @@
   <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
-        バックアップ方法の推奨
+        おすすめのバックアップ方法
       
     </span>
   </a>
@@ -1334,17 +1343,6 @@
       
         <li class="md-nav__item">
   <a href="#_7" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        バックアップ命名規則
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         バックアップの罠
@@ -1375,43 +1373,40 @@
 
 
 <h1 id="_1">バックアップ<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<p><code>06_Backups/</code> に定期バックアップを置く場所。</p>
+<h2 id="2026-04-26">基本方針（2026-04-26 改訂）<a class="headerlink" href="#2026-04-26" title="Permanent link">&para;</a></h2>
+<p><strong>重いフォルダ（<code>unity/</code> <code>blender/</code> <code>refs/</code>）は Git 管理外</strong> にした。
+そのため、これらの定期バックアップは <strong>クラウド or 外付けストレージ</strong> で取る運用にする。</p>
+<p><code>docs/</code> と各種設定ファイル（<code>mkdocs.yml</code> <code>update.bat</code> <code>CLAUDE.md</code> 等）は <code>update.bat</code> のたびに GitHub に push されるので、<strong>それ自体がバックアップ</strong>として機能する。</p>
 <h2 id="_2">バックアップ対象の優先順位<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <h3 id="_3">最重要（絶対に失いたくない）<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>docs/</code> のドキュメント</li>
-<li><code>03_Unity_Project/Assets/_Project/</code> の自作スクリプトとシーン</li>
-<li><code>02_Assets_Source/</code> の有料素材と自作素材</li>
+<li><code>unity/Assets/_Project/</code> の自作スクリプトとシーン</li>
+<li><code>blender/</code> の有料素材と自作キャラ素材</li>
+<li><code>docs/</code> のドキュメント（<strong>GitHub に常時バックアップ済み</strong>）</li>
 </ul>
 <h3 id="_4">重要<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>03_Unity_Project</code> 全体（ただし <code>Library/</code> と <code>Temp/</code> は除外していい）</li>
+<li><code>unity/</code> 全体（ただし <code>Library/</code> と <code>Temp/</code> は除外していい）</li>
 </ul>
 <h3 id="_5">低優先<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>04_Builds/</code>（再ビルドできるので最悪消えてもOK）</li>
+<li><code>unity/Builds/</code>（再ビルドできるので最悪消えてもOK）</li>
 </ul>
-<h2 id="_6">バックアップ方法の推奨<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
-<p>手軽な順：</p>
+<h2 id="_6">おすすめのバックアップ方法<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>このフォルダに ZIP を置く</strong>（日付付き）<ul>
-<li>例: <code>VRBoxing_backup_2026-04-30.zip</code></li>
-<li>週1回くらいのペースで</li>
+<li><strong>クラウド同期</strong>（Google Drive / OneDrive / Dropbox）<ul>
+<li>フォルダごと自動同期しておく</li>
+<li>一度設定すれば手間ゼロ</li>
 </ul>
 </li>
-<li><strong>外付けHDD / USB メモリ</strong></li>
-<li><strong>クラウド</strong>（Google Drive, OneDrive, Dropbox）</li>
-<li><strong>Git + GitHub</strong>（ベストだが慣れが必要 → 既にこのプロジェクトで採用済み）</li>
-</ol>
-<h2 id="_7">バックアップ命名規則<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VRBoxing_backup_YYYY-MM-DD_vX.X.zip
-</span></code></pre></div>
-<p>例：</p>
-<ul>
-<li><code>VRBoxing_backup_2026-04-30_v0.1.zip</code></li>
-<li><code>VRBoxing_backup_2026-05-15_v0.2.zip</code></li>
+<li><strong>外付けHDD / SSD</strong><ul>
+<li>月1回くらい手動コピー</li>
+<li>クラウドが落ちたとき用の保険</li>
 </ul>
-<h2 id="_8">バックアップの罠<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+</li>
+<li><strong>GitHub</strong>（軽い <code>docs/</code> のみ自動的にバックアップ済み）</li>
+</ol>
+<h2 id="_7">バックアップの罠<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
 <div class="admonition danger">
 <p class="admonition-title">やりがちなミス</p>
 <ul>

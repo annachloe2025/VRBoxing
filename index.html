@@ -20,7 +20,7 @@
         
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="assets/icons/favicon-32.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
@@ -96,8 +96,7 @@
   <nav class="md-header__inner md-grid" aria-label="ヘッダー">
     <a href="." title="VRBoxing" class="md-header__button md-logo" aria-label="VRBoxing" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <img src="assets/icons/boxing-glove.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -400,8 +399,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href="." title="VRBoxing" class="md-nav__button md-logo" aria-label="VRBoxing" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <img src="assets/icons/boxing-glove.svg" alt="logo">
 
     </a>
     VRBoxing
@@ -1466,14 +1464,17 @@
 <h2 id="_5">📁 プロジェクトのフォルダ構成<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
 <div class="admonition info">
 <p class="admonition-title">リポジトリのフォルダ</p>
+<p><strong>Git 管理（GitHub にアップ）:</strong></p>
 <ul>
 <li><strong><code>docs/</code></strong> — このドキュメントサイトの元ファイル（MD）</li>
-<li><strong><code>02_Assets_Source/</code></strong> — 素材の元データ（キャラモデル等）</li>
-<li><strong><code>03_Unity_Project/</code></strong> — Unity プロジェクト本体</li>
-<li><strong><code>04_Builds/</code></strong> — ビルド済みの実行ファイル</li>
-<li><strong><code>05_Reference/</code></strong> — 参考資料（他人のもの）</li>
-<li><strong><code>06_Backups/</code></strong> — 定期バックアップ</li>
 </ul>
+<p><strong>ローカル限定（Git 管理外）:</strong></p>
+<ul>
+<li><strong><code>unity/</code></strong> — Unity プロジェクト本体</li>
+<li><strong><code>blender/</code></strong> — キャラ素材・Blender 作業ファイル</li>
+<li><strong><code>refs/</code></strong> — 参考資料・PDF・スクショなど</li>
+</ul>
+<p>重いバイナリは GitHub に上げず、各自のローカルで管理する方針（2026-04-26〜）。</p>
 </div>
 <h2 id="_6">🛠 更新のしかた<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
 <p>MD ファイルを書き足す／編集したら、プロジェクトフォルダの <strong><code>update.bat</code></strong> をダブルクリック。それだけで：</p>

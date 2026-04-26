@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Background gradient: soft pink → coral -->
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFE8EE"/>
+      <stop offset="100%" stop-color="#FFB8C9"/>
+    </linearGradient>
+    <!-- Glove gradient: bright red with soft volume -->
+    <radialGradient id="glove" cx="0.32" cy="0.28" r="0.95">
+      <stop offset="0%" stop-color="#FF8A7E"/>
+      <stop offset="45%" stop-color="#E8392C"/>
+      <stop offset="100%" stop-color="#9A1B14"/>
+    </radialGradient>
+    <radialGradient id="thumb" cx="0.4" cy="0.3" r="0.9">
+      <stop offset="0%" stop-color="#FF7B6E"/>
+      <stop offset="50%" stop-color="#D9342B"/>
+      <stop offset="100%" stop-color="#8A1810"/>
+    </radialGradient>
+    <linearGradient id="cuff" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F0E8DA"/>
+    </linearGradient>
+    <!-- Soft drop shadow -->
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+      <feOffset dx="0" dy="8" result="offset"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+
+  <!-- Sparkles around the glove -->
+  <g fill="#FFFFFF">
+    <path d="M 170 230 L 182 200 L 194 230 L 224 242 L 194 254 L 182 284 L 170 254 L 140 242 Z" opacity="0.85"/>
+    <path d="M 870 360 L 878 342 L 886 360 L 904 368 L 886 376 L 878 394 L 870 376 L 852 368 Z" opacity="0.75"/>
+    <circle cx="160" cy="500" r="8" opacity="0.7"/>
+    <circle cx="880" cy="600" r="10" opacity="0.7"/>
+    <circle cx="200" cy="780" r="6" opacity="0.6"/>
+    <circle cx="840" cy="780" r="6" opacity="0.6"/>
+  </g>
+
+  <!-- Soft shadow under glove -->
+  <ellipse cx="512" cy="870" rx="290" ry="22" fill="#7A1810" opacity="0.18"/>
+
+  <g filter="url(#softShadow)" transform="translate(0 -60)">
+    <!-- Thumb (drawn first, behind main fist) -->
+    <path d="M 320 580
+             Q 230 540 230 440
+             Q 230 340 330 320
+             Q 420 320 440 410
+             Q 450 500 410 570
+             Q 380 610 340 600 Z"
+          fill="url(#thumb)"/>
+
+    <!-- Main fist body -->
+    <path d="M 360 290
+             Q 360 160 510 140
+             Q 700 130 800 230
+             Q 850 310 840 450
+             Q 830 580 770 650
+             Q 690 720 540 720
+             Q 410 720 370 650
+             Q 320 560 330 430
+             Q 340 350 360 290 Z"
+          fill="url(#glove)"/>
+
+    <!-- Knuckle indentations -->
+    <path d="M 450 220 Q 470 270 480 330" stroke="#7A1810" stroke-width="6" fill="none" opacity="0.35" stroke-linecap="round"/>
+    <path d="M 580 200 Q 590 260 595 330" stroke="#7A1810" stroke-width="6" fill="none" opacity="0.35" stroke-linecap="round"/>
+    <path d="M 700 220 Q 705 270 700 340" stroke="#7A1810" stroke-width="6" fill="none" opacity="0.35" stroke-linecap="round"/>
+
+    <!-- Anime-style highlights -->
+    <ellipse cx="470" cy="240" rx="90" ry="55" fill="#FFFFFF" opacity="0.5" transform="rotate(-22 470 240)"/>
+    <ellipse cx="400" cy="340" rx="22" ry="14" fill="#FFFFFF" opacity="0.7"/>
+    <ellipse cx="320" cy="390" rx="14" ry="22" fill="#FFFFFF" opacity="0.45" transform="rotate(-30 320 390)"/>
+
+    <!-- Wrist cuff (overlapping the glove body) -->
+    <path d="M 320 660
+             Q 305 660 305 680
+             L 295 870
+             Q 295 905 330 905
+             L 740 905
+             Q 775 905 775 870
+             L 765 680
+             Q 765 660 750 660 Z"
+          fill="url(#cuff)"/>
+
+    <!-- Cuff stitch line -->
+    <path d="M 315 690 Q 535 678 760 690" stroke="#D8CFBE" stroke-width="3" stroke-dasharray="9 7" fill="none"/>
+
+    <!-- Lacing -->
+    <g stroke="#E33A2E" stroke-width="7" fill="none" stroke-linecap="round">
+      <line x1="430" y1="745" x2="510" y2="855"/>
+      <line x1="510" y1="745" x2="430" y2="855"/>
+      <line x1="555" y1="745" x2="635" y2="855"/>
+      <line x1="635" y1="745" x2="555" y2="855"/>
+    </g>
+    <g fill="#B82A20">
+      <circle cx="430" cy="745" r="6"/>
+      <circle cx="510" cy="745" r="6"/>
+      <circle cx="430" cy="855" r="6"/>
+      <circle cx="510" cy="855" r="6"/>
+      <circle cx="555" cy="745" r="6"/>
+      <circle cx="635" cy="745" r="6"/>
+      <circle cx="555" cy="855" r="6"/>
+      <circle cx="635" cy="855" r="6"/>
+    </g>
+
+    <!-- Cute heart accent on glove -->
+    <g transform="translate(660 470) rotate(15)">
+      <path d="M 0 -4
+               C -18 -28, -50 -22, -50 6
+               C -50 32, -20 50, 0 64
+               C 20 50, 50 32, 50 6
+               C 50 -22, 18 -28, 0 -4 Z"
+            fill="#FFD0DC" stroke="#FFFFFF" stroke-width="5"/>
+      <ellipse cx="-22" cy="6" rx="8" ry="5" fill="#FFFFFF" opacity="0.85" transform="rotate(-25 -22 6)"/>
+    </g>
+  </g>
+</svg>

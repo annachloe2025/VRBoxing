@@ -8,6 +8,7 @@ edit_uri: edit/main/docs/
 theme:
   name: material
   language: ja
+  custom_dir: overrides
   logo: assets/icons/boxing-glove.svg
   favicon: assets/icons/favicon-32.png
   features:

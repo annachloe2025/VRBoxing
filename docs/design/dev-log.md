@@ -36,7 +36,7 @@
 ### 次やること
 
 - パンチカウンター／カロリー UI（演出フェーズの本命）
-- iPhone のホーム画面追加で使いたい場合は `overrides/main.html` で `<link rel="apple-touch-icon">` を足す（必要になったら）
+- iPhone のホーム画面追加用に `overrides/main.html` で `<link rel="apple-touch-icon">` を追加し、`mkdocs.yml` に `theme.custom_dir: overrides` を設定済み
 
 ---
 

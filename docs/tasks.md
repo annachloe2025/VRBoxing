@@ -13,9 +13,13 @@
 - [x] **2026-04-24** **キャラクターの待機アニメ適用**（VRoid → Blender でメッシュ書き出し → Mixamo で再リギング＆Idle DL → Unity で `Root Transform Rotation: Original + Bake Into Pose` で正面向き調整）🫁
 - [x] **2026-05-02** **VRM Add-on for Blender v3.26.8 を Blender 5.1.1 にインストール**（Extension版）
 - [x] **2026-05-02** **Mixamo用 FBX 自動エクスポート機構作成**（`scripts/export_for_mixamo.py` + `.bat`、ダブルクリックで書き出し / D&Dで他キャラ対応）
-- [ ] **Mixamoでボクシング系アニメを5〜8本 DL**（Without Skin / FBX Binary / 60FPS、1フォルダにまとめる）← 次のアクション（ユーザー側）
+- [ ] **Mixamoでボクシング系アニメを5〜8本 DL**（Without Skin / FBX Binary / 60FPS、1フォルダにまとめる）
 - [ ] **複数anim FBX → NLA → 1FBXへ統合スクリプト作成・実行**（DL完了後にAI側で）
-- [ ] **パンチカウンター / 消費カロリー表示**（UI）
+- [x] **2026-05-02** **パンチカウンター実装**（`PunchEvents` / `PunchCounter` / `Editor/PunchCounterCreator`、HUD/ビルボード/固定壁の3モード切替、リング後方の固定壁ビルボードを採用）
+- [x] **2026-05-02** **当たり判定を頭部・腹部に分割**（`HitZone` / `Editor/HitZoneSetup` でメニュー一発配置、ボーン名から自動検出）
+- [x] **2026-05-02** **コライダーをボーン追従**（`BoneFollower` を LateUpdate で適用、Animator 出力後に位置を上書き）
+- [x] **2026-05-02** **部位別のけぞり**（頭=Head回転 / 腹=Spine回転+位置移動、LateUpdate で Animator 出力に上乗せ）
+- [ ] **消費カロリー表示**（UI、PPMから推定）
 - [ ] **パンチ音**（拳が空を切る音、スゴ味）
 - [ ] **のけぞり方向の改良**（真後ろだけじゃなく、殴られた部位で変わるように）
 

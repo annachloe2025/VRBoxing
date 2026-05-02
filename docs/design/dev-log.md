@@ -22,6 +22,123 @@
 
 ---
 
+## 2026-05-02（その4）— 部位別ヒット判定 + ボーン追従 + のけぞり
+
+### やったこと
+
+- **パンチカウンター UI をビルボード化**
+    - HUD（HMD追従）だと視線移動で揺れて気が散るため、リング奥の **固定壁ビルボード** に変更
+    - `PunchCounter.DisplayMode` enum を追加（HudFollowHmd / WorldBillboard / WorldFixed）
+    - ビルボード設定: 位置 (0, 3.0, 7.0) / サイズ 4.8m × 3.4m / フォントサイズ4倍 / 完全固定壁モード
+    - エディタメニュー `VRBoxing > Create Punch Counter Billboard` を追加
+    - HUDモードのメニューも残してあるので、後でHUDに別情報（タイマー等）を出せる
+- **当たり判定を頭部 / 腹部に分割**
+    - `Assets/Scripts/HitZone.cs` 新規（`enum BodyPart { Unknown, Head, Body }` を持つマーカー）
+    - `Assets/Editor/HitZoneSetup.cs` 新規（メニュー `VRBoxing > Setup Hit Zones (Head + Body)`）
+    - 既存の全身 Capsule Collider は無効化、頭/腹の2つの子オブジェクトコライダーに置換
+    - `PunchEventData` に `bodyPart` フィールドを追加、Console ログにも部位を表示
+- **コライダーをボーンに追従**
+    - `Assets/Scripts/BoneFollower.cs` 新規（`LateUpdate` で `targetBone.TransformPoint(localOffset)` を毎フレーム適用）
+    - `[DefaultExecutionOrder(100)]` で Animator (デフォルト 0) より後に実行
+    - HitZoneSetup でボーン名パターン検索（VRoid: `J_Bip_C_*`, Mixamoリギング: `mixamorig:*`）
+    - 「完全一致 → 部分一致」の優先度検索で、`mixamorig:Spine` と `mixamorig:Spine1` を取り違えない
+- **部位別のけぞりリアクション**
+    - **頭部ヒット**: Head ボーンを当たった方向に最大12° **回転**（首が振れる感触）
+    - **腹部ヒット**: Spine ボーンに「**回転 + 位置移動**」を同時適用（上半身が押される感触）
+    - LateUpdate でAnimator出力に上乗せする方式（`bone.rotation = offset * bone.rotation` / `bone.position += offset`）
+    - イージング: 倒し EaseOut（衝撃）、戻し EaseIn（ゆっくり）
+
+### 詰まったところ
+
+- **コライダーがボーン追従しない問題**: 単に GameObject を子にするだけでは Animator がボーン回転を上書きしてしまう
+    - 解決: BoneFollower を別 GameObject に持たせ、LateUpdate で位置を上書き
+- **Spineボーンの混同**: `IndexOf("Spine")` だと `mixamorig:Spine1` も `Spine` を含むのでマッチしてしまう
+    - 解決: 完全一致 → 部分一致の2段階検索
+- **「Hipsを動かすと くの字 にならない」問題**: Hips はスケルトンルートなので、回転すると足ごと動く（前傾になるだけ）
+    - 解決: 「くの字」演出には Spine（腰直上）の回転が正解。Hips追従と Spine回転を分離
+- **回転方向が逆**: 殴られて押される側に倒れるべきなのに、なぜか同方向に折れていた
+    - 解決: `Quaternion.AngleAxis(-maxAngle, ...)` で符号反転
+
+### 最終的な調整値（VR内の手応えで決定）
+
+- 頭コライダー: SphereCollider radius=0.10, center=(0, 0.05, 0)、`J_Bip_C_Head` 追従
+- 腹コライダー: CapsuleCollider radius=0.10, height=0, center=(0, 0, 0)、`J_Bip_C_Hips` 追従
+- 頭リアクション: Head ボーン 最大12° 回転
+- 腹リアクション: Spine ボーン 最大-5° 回転 + 最大10cm 移動
+
+### 主要な追加スクリプト
+
+- `Assets/Scripts/PunchEvents.cs` — 静的イベントハブ + `PunchEventData`
+- `Assets/Scripts/PunchCounter.cs` — UIランタイム自動生成、3モード切替
+- `Assets/Scripts/HitZone.cs` — 部位マーカー
+- `Assets/Scripts/BoneFollower.cs` — ボーン追従
+- `Assets/Editor/PunchCounterCreator.cs` — メニュー配置
+- `Assets/Editor/HitZoneSetup.cs` — メニュー配置 + ボーン自動検出
+
+### 既存スクリプトの変更
+
+- `PunchDetector.cs` — HitZone の bodyPart を取得、`PunchEvents.RaisePunch(...)` を発火、`receiver.TakeHit(.., part)` を呼ぶ
+- `HitReceiver.cs` — 部位別 TakeHit オーバーロード追加、`headBone` / `bodyReactionBone` フィールド、LateUpdate でAnimator出力に上乗せ
+
+### 次やること
+
+- まだ未対応: パンチカウンター/カロリー UI の「カロリー推定」表示
+- 拳が空を切る音
+- Mixamo でボクシング系アニメをDL → NLA束ねスクリプトでまとめる（前回からの宿題）
+- 振動 (Haptic Feedback) — Step 1-5 の積み残し
+
+---
+
+## 2026-05-02（その3）— パンチカウンタ HUD 実装
+
+### やったこと
+
+- **イベント基盤**: `Assets/Scripts/PunchEvents.cs` を新規作成
+    - 静的 `event Action<PunchEventData> OnPunch` だけのシンプルなハブ
+    - `PunchEventData` に velocity / speed / hitPoint / handName / 左右判定 / receiverName / time を持たせた
+    - `RuntimeInitializeOnLoadMethod` でプレイ毎にリスナーを掃除（Domain Reload 無効環境で残らないように）
+- **PunchDetector に発火を追加**: `receiver.TakeHit(...)` の直後に `PunchEvents.RaisePunch(...)` を呼ぶように改修
+    - 左右の判定は `transform.parent.name` に "Left" / "Right" が含まれるかでざっくり（XR Interaction Toolkit の `LeftHand Controller` / `RightHand Controller` 命名を前提）
+- **HUD 本体**: `Assets/Scripts/PunchCounter.cs` を新規作成
+    - 起動時に World Space Canvas + TMP テキストを実行時自動生成（プレハブ不要）
+    - HMD（Main Camera）に滑らかに追従する HUD として動作（`hmdLocalOffset` で配置調整）
+    - 表示項目: 総数（特大）／ 左右別 / 直近速度 / 最大速度 / 平均速度 / 直近5発の平均 / 経過時間 / PPM(パンチ毎分)
+    - R キーでセッションリセット
+- **配置メニュー**: `Assets/Editor/PunchCounterCreator.cs` を新規作成
+    - `VRBoxing > Create Punch Counter HUD` で1クリック配置
+    - `VRBoxing > Delete Punch Counter HUD` で取り外しもできる
+
+### ユーザーの操作
+
+1. Unity の上部メニューから **`VRBoxing > Create Punch Counter HUD`** を1回クリック
+2. ▶ Play して VR をかぶる → 視界の右下にカウンタが浮く
+
+### メモ
+
+- 既存の `PunchDetector` / `HitReceiver` には触らずに増設できる設計（イベントハブ経由）
+- TextMeshPro 前提（VR テンプレートなら標準で入ってる）
+- 「ユーザーが見たい所」より「デバッグしたい所」を優先して情報量を多めに。慣れてきたら `detailText` の出力を整理予定
+- ハンド判定は親オブジェクト名のヒューリスティック。違う命名にしてある場合はカウンタの「L/R」が両方0になるが、総数はちゃんと数える
+
+---
+
+## 2026-05-02（その2）— ドキュメント整合性チェック
+
+### やったこと
+
+- 久々にプロジェクトに戻ったタイミングで、ドキュメントと実装の進捗ズレを棚卸し
+- 3ファイルを実態に同期：
+    - `docs/steps/step1.md` — 事前準備〜Task 1-5 を `[x]` に。Task 1-6（フィットネスUI）と Haptic Feedback だけ残タスクに整理。冒頭にステータス admonition を追加
+    - `docs/tasks.md` — 「ボクシング実装フェーズ（完了 ✅）」セクションの中身が `[ ]` のままだった矛盾を解消
+    - `docs/index.md` — ダッシュボードを最新化（最終更新2026-05-02 / 直近の動き = Mixamo用FBX自動エクスポート / 次のアクション = ボクシング系アニメDL）
+
+### メモ
+
+- 実装は進んでいるのにドキュメントが追いついていない、というのが地味に積もる。dev-logは粒度細かく書けてたが、step1.md と tasks.md のチェックボックス更新が抜けがちだった
+- 認知負荷を下げる仕組みとして、節目で実装と docs を機械的にチェックする運用にしたい
+
+---
+
 ## 2026-05-02
 
 ### やったこと

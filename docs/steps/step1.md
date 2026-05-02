@@ -7,67 +7,70 @@
     **期間の目安**: 2週間（週末ベース）  
     **完成判定**: 1分間殴り続けると息が切れる。つまり「フィットネスとして機能する」。
 
+!!! success "ステータス: ステップ1の主要部は完了（2026-04-24達成）"
+
+    女性キャラを VR で殴って音・のけぞり・ヒットエフェクト・グローブまで揃った状態。
+    残タスクは **Task 1-6（フィットネス UI）** と **Task 1-5 の Haptic Feedback** のみ。
+
 ## 事前準備
 
 ### 1. ソフトウェアのインストール
 
-- [ ] **Unity Hub** をインストール（<https://unity.com/download>）
-- [ ] **Unity エディタ（LTS版）** をインストール
-    - 2022.3 LTS か 6000 LTS を推奨
-    - インストール時に「Windows Build Support」をチェック
-- [ ] **Visual Studio Community**（C# 書くため、Unityインストーラーから一緒に入れられる）
-- [ ] **SteamVR** が入っていることを確認（Valve Index用）
-- [ ] **Git**（バージョン管理、後で効いてくる）
+- [x] **Unity Hub** をインストール（<https://unity.com/download>）
+- [x] **Unity エディタ（LTS版）** をインストール（2022.3.62f1 LTS 採用）
+- [x] **Visual Studio Community**（C# 書くため、Unityインストーラーから一緒に入れられる）
+- [x] **SteamVR** が入っていることを確認（Valve Index用）
+- [x] **Git**（バージョン管理、後で効いてくる）
 
 ### 2. アセットの入手
 
-- [ ] **VRoid Studio** または **Mixamo** で女性キャラを用意
-    - VRoid Studio: <https://vroid.com/studio> （アニメ調、カスタマイズ自由）
-    - Mixamo: <https://www.mixamo.com/> （リアル調、Adobe無料アカウント）
-- [ ] ボクシング用の T ポーズ状態で FBX 出力できるようにしておく
+- [x] **VRoid Studio** または **Mixamo** で女性キャラを用意（VRoid Studio で作成 → VRM）
+- [x] ボクシング用の T ポーズ状態で FBX 出力できるようにしておく
 
 ### 3. ハードウェア
 
-- [ ] **Knuckles コントローラー用の手首ストラップ**を用意（強く振るので安全対策）
-- [ ] プレイエリアを最低 2m × 2m 確保
+- [ ] **Knuckles コントローラー用の手首ストラップ**を用意（強く振るので安全対策）← 未対応
+- [x] プレイエリアを最低 2m × 2m 確保
 
 ## 開発タスク
 
-### Task 1-1: Unity プロジェクト作成
+### Task 1-1: Unity プロジェクト作成 ✅
 
-- [ ] Unity Hub で新規3Dプロジェクト作成（場所: `unity/VRBoxing`）
-- [ ] Package Manager から **XR Plugin Management** をインストール
-- [ ] **OpenXR Plugin** を有効化（PC向け）
-- [ ] **XR Interaction Toolkit** をインストール（VR操作の標準パッケージ）
+- [x] Unity Hub で新規3Dプロジェクト作成（VR テンプレートで `03_Unity_Project` を作成）
+- [x] Package Manager から **XR Plugin Management** をインストール（VRテンプレで自動）
+- [x] **OpenXR Plugin** を有効化（PC向け）
+- [x] **XR Interaction Toolkit** をインストール（VRテンプレで自動）
 
-### Task 1-2: VR で立てる状態にする
+### Task 1-2: VR で立てる状態にする ✅
 
-- [ ] XR Origin（Action-based）をシーンに配置
-- [ ] Index を被って、自分の手が見える状態にする
-- [ ] コントローラーのモデルが表示されることを確認
+- [x] XR Origin（Action-based）をシーンに配置
+- [x] Index を被って、自分の手が見える状態にする
+- [x] コントローラーのモデルが表示されることを確認
 
-### Task 1-3: 女性キャラを配置
+### Task 1-3: 女性キャラを配置 ✅
 
-- [ ] 入手した FBX を Unity にインポート
-- [ ] シーンに配置、Tポーズで目の前に立っている状態
-- [ ] 身長・位置を自分に対して自然な距離に調整（2m程度前方）
+- [x] 入手した FBX（VRM）を Unity にインポート（UniVRM 0.x）
+- [x] シーンに配置、目の前に立っている状態
+- [x] 身長・位置を自分に対して自然な距離に調整（2m程度前方）
 
-### Task 1-4: パンチの当たり判定
+### Task 1-4: パンチの当たり判定 ✅
 
-- [ ] 各コントローラーに Sphere Collider（trigger）を付ける（拳のサイズ）
-- [ ] キャラの顔・胴体に Collider を付ける
-- [ ] `OnTriggerEnter` でヒット検知
-- [ ] コントローラーの速度を `Rigidbody.velocity` または前フレームとの差分で取得
-- [ ] 速度が一定以上の場合のみ「有効ヒット」とする（触っただけでは反応しない）
+- [x] 各コントローラーに Sphere Collider（trigger）を付ける（`Fist` 子オブジェクト）
+- [x] キャラに Capsule Collider を付ける
+- [x] `OnTriggerEnter` でヒット検知（`PunchDetector.cs`）
+- [x] コントローラーの速度を前フレームとの差分で取得
+- [x] 速度しきい値（1.5 m/s）以上だけ有効ヒットとして扱う
 
 ### Task 1-5: 殴った感を出す
 
-- [ ] ヒット時に効果音（パン！ドスッ！）
-- [ ] ヒット時にキャラが少し後ろに仰け反るアニメ or 位置ズラし
-- [ ] ヒットエフェクト（パーティクル or 画面の一瞬の揺れ）
-- [ ] コントローラーの振動（Haptic Feedback）
+- [x] ヒット時に効果音（5種ランダム + ピッチ揺らし）
+- [x] ヒット時にキャラが少し後ろに仰け反る（`HitReceiver.cs`）
+- [x] ヒットエフェクト（命中位置で白い丸粒が弾ける `HitEffect.cs`）
+- [x] **拳をボクシンググローブに**（`GloveProfile` + `GloveEquipper`、両手赤グローブ） ※プラスα
+- [x] **キャラ待機アニメ**（VRoid → Blender → Mixamo Idle → Unity 適用） ※プラスα
+- [ ] コントローラーの振動（Haptic Feedback）← 未対応
 
-### Task 1-6: フィットネス機能（最低限）
+### Task 1-6: フィットネス機能（最低限）← 未着手
 
 - [ ] 画面にタイマー表示（3分ラウンド）
 - [ ] パンチカウント表示

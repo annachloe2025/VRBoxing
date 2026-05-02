@@ -22,6 +22,104 @@
 
 ---
 
+## 2026-05-03 — HP/ダメージ + ヒットFX強弱 + Thrill of the Fight 風速度計算
+
+### やったこと
+
+- **EnemyHealth システム**（`Assets/Scripts/EnemyHealth.cs` 新規）
+    - Head HP / Body HP を別々に保持（デフォルト 500 / 800）
+    - PunchEvents 購読でダメージ計算: `speed × damagePerSpeed`（min/max でクランプ）
+    - 部位倍率は最終的に **両方 1.0 に統一**（読みやすさ優先、ユーザー要望）
+    - 自分宛のパンチか `receiverName` で判定（複数敵対応）
+    - KO 判定（Head と Body 両方0で発火）、static event で疎結合に通知
+- **EnemyHealthBoard**（`Assets/Scripts/EnemyHealthBoard.cs` 新規）
+    - HUD/ビルボード/固定壁の3モード（PunchCounter と同じ流儀）
+    - Head/Body の HP数値 + ASCII バー（■□で描画）+ 直近ダメージ表示（2秒フェード）
+    - KO になったら赤字で "K.O." 表示（直近ダメージより優先）
+    - リング後方の **PunchCounter Billboard の右隣** (+4, 3, 7) に固定壁配置
+- **`Assets/Editor/EnemyHealthSetup.cs` 新規**
+    - メニュー `VRBoxing > Setup Enemy Health` で「キャラに HP 追加 + シーンに Board 配置」を1クリック
+    - 既存 EnemyHealth がある時は「リセット」ダイアログで HP値と部位倍率を一括復元
+- **ヒットFX に強弱を追加**（`HitReceiver.cs` 改修）
+    - PlayHitFx に bodyPart を渡し、部位倍率と速度から「ダメージ相当値 (dmgEq)」を計算
+    - 音量・ピッチ・パーティクル強度を全て dmgEq ベースに切替
+    - 部位倍率は最終的に全部1.0統一（ユーザーが混乱しないように）
+- **HitEffect の色段階化**（`HitEffect.cs` 改修）
+    - intensity に応じて 🟢緑 → 🟡黄 → 🟠橙 → 🔴赤
+    - しきい値型（1=緑, 2=黄, 4=橙, 6=赤）で線形補間。Inspector で各しきい値・色を編集可能
+    - ParticleSystem.EmitParams.startColor で1ヒット分の粒色を一括指定（過去の粒に影響しない）
+    - 粒数の最大を 120 → 180 に増量
+- **拳のヒット後クールダウン**（`PunchDetector.cs` 改修）
+    - ヒット成立後、その拳のコライダーを 0.5 秒間 enabled=false に
+    - 1発のパンチで連続ヒット → ダメージ二重計上を防止
+    - 左右独立（左右別 PunchDetector インスタンスなので自然に独立）
+- **Thrill of the Fight 風の速度計算**（`PunchDetector.cs` 改修）
+    - **ピーク速度方式**: 直近6フレーム（約120ms）の最大速度ベクトルを採用 → 「全力で振った感」が出る
+    - **方向補正**: 拳の前方向(+Z) と速度ベクトルの角度差で減衰
+        - 0〜45° → ×1.0（補正なし）
+        - 45〜90° → ×1.0 → ×0.33 線形補間
+        - 90°以上 → ×0.33（最大減衰）
+    - 実効速度 = ピーク速度 × 角度補正 を HitReceiver / EnemyHealth / PunchEvents に渡す
+    - 「ちゃんと突き出した」パンチが評価され、「振り回し」だけは弱判定になる
+- **体の向きをプレイヤーに追従**（`Assets/Scripts/BodyFaceAtPlayer.cs` 新規 + `Editor/BodyFaceAtPlayerSetup.cs`）
+    - `LateUpdate` で Camera.main 方向に Yaw だけ回転
+    - デッドゾーン 5°、回転スピード 90°/秒、KeepTurningUntilFacing で「回り始めたら正対するまで止まらない」
+    - HeadLookAtPlayer (IK LookAt) は視線追従にとどまるので、体軸ごとに向き直すのは別コンポーネントに分離
+
+### 詰まったところ
+
+- **EnemyHealthBoard の位置調整**: 最初は左 (-4, 3, 7) に置いたが、ユーザーから「右に」要望
+    - 解決: (+4, 3, 7) に。Editor の Setup を「既存ボードがあっても位置だけ再設定」する処理に改修
+- **エフェクト色の補間範囲**: 線形 0〜1 だと「弱パンチでも黄」になりがち
+    - 解決: しきい値型に変更（1, 2, 4, 6）。値域も Inspector でユーザーが調整可能
+- **回転が逆向き**: 腹ヒット時の Spine 回転、当初は同方向に折れる動きになっていた
+    - 解決: `Quaternion.AngleAxis(-maxAngle, axis)` で符号反転して、押される側にのけぞるように
+
+### 最終的な調整値（VR内の手応えで決定）
+
+- パンチクールダウン: 0.5秒
+- 速度計算: ピーク速度 + 方向補正（TotF風、45°/90°/×0.33）
+- HP: Head 500 / Body 800
+- ダメージ: speed × 4（min 1, max 40）、部位倍率なし
+- エフェクト色しきい値: intensity 1=緑, 2=黄, 4=橙, 6=赤
+- 部位リアクション:
+    - 頭ヒット → Head ボーン回転 12°
+    - 腹ヒット → Spine ボーン回転 -3° + 位置移動 10cm
+- ボード配置:
+    - PunchCounter Billboard: (0, 3, 7) 中央
+    - EnemyHealthBoard: (+4, 3, 7) 右
+
+### 主要な追加スクリプト
+
+- `Assets/Scripts/EnemyHealth.cs` — HP管理 + ダメージ計算
+- `Assets/Scripts/EnemyHealthBoard.cs` — HP表示UI（3モード）
+- `Assets/Scripts/BodyFaceAtPlayer.cs` — 体軸追従
+- `Assets/Editor/EnemyHealthSetup.cs` — メニュー配置
+- `Assets/Editor/BodyFaceAtPlayerSetup.cs` — メニュー配置
+
+### 既存スクリプトの大きな変更
+
+- `PunchDetector.cs` — Thrill of the Fight 風速度（ピーク + 方向補正）、ヒット後クールダウン、velocityHistory
+- `HitReceiver.cs` — bodyPart を PlayHitFx に渡し、dmgEq ベースで音とエフェクト強度を変える、部位倍率フィールド
+- `HitEffect.cs` — 色しきい値、damage 強度ベースの粒色（緑→黄→橙→赤）
+- `EnemyHealthBoard.cs` — 直近ダメージ表示（2秒フェード）追加
+
+### 次やること
+
+- 拳が空を切る音（スゴ味）
+- 消費カロリー表示（PPM ベース推定）
+- Mixamoでボクシング系アニメをDL → NLA束ねスクリプトでまとめる（前回からの宿題）
+- 振動 (Haptic Feedback) — Step 1-5 の積み残し
+- KO 後のリトライUI（現状は KO 表示するだけで何も起きない）
+
+### 参考
+
+- ネット調査の結果、Thrill of the Fight 方式（ピーク速度 + 方向補正 + 角度減衰）を採用
+- 業界では他に「複数フレーム平均」（VRTK / SteamVR / XR Interaction Toolkit）も標準
+- 詳しくは [Thrill of the Fight - New punch force calculations](https://steamcommunity.com/app/494150/discussions/0/1326718197225193613/) などを参照
+
+---
+
 ## 2026-05-02（その4）— 部位別ヒット判定 + ボーン追従 + のけぞり
 
 ### やったこと

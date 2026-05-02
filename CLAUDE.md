@@ -83,11 +83,21 @@ GitHub には軽いドキュメント（`docs/`）と設定ファイルだけが
 ## 現在のステータス
 
 - **フェーズ**: ステップ1 完了 → 演出・調整フェーズ
-- **最終更新**: 2026-04-24
-- **直近の動き**: 待機アニメ適用完了 🫁（VRoid → Blender でメッシュ限定 FBX 書き出し → Mixamo で再リギング＆Idle DL → Unity で Root Transform Rotation を `Original` + Bake Into Pose にして正面向きに）。軽い体軸の傾きは残ってるが演出フェーズで妥協、後で Offset で詰める方針
-- **次のアクション**: **パンチカウンター／カロリー UI**。ほかに 空振り音、のけぞり方向の改良 など演出周り
+- **最終更新**: 2026-05-02
+- **直近の動き**:
+    - Blender 5.1.1 + MCP 接続済み環境を構築
+    - **VRM Add-on for Blender v3.26.8**（Extension版）をインストール済み → `import_scene.vrm` / `export_scene.vrm` 使える
+    - **Mixamo用FBX自動書き出しスクリプト作成済み**: `scripts/export_for_mixamo.py` + `.bat`（ダブルクリックで `Character_01_練習用_for_mixamo.fbx` 生成、D&Dで他キャラも処理可）
+    - Blenderの役割を「FBX化＋表情モーフィング＋固有シェイプキー量産」に絞る方針に整理（体のアニメは Mixamo + Unity Animation Rigging で対応）
+- **次のアクション（ユーザー）**: Mixamo で前回アップ済みキャラを開き、ボクシング系を5〜8本 DL（Without Skin / FBX Binary / 60FPS）→ フォルダパスをClaudeに渡す
+- **次のアクション（AI）**: 落とした anim FBX を NLA に積んで1個のFBXに束ねるスクリプトを作成・実行
 
 最新の詳細状況は `docs/tasks.md` と `docs/design/dev-log.md` を参照。
+
+## 自動化済みスクリプト
+
+- `update.bat` — ドキュメント更新を git commit → push → mkdocs deploy までワンクリック
+- `scripts/export_for_mixamo.bat` — VRoidキャラを Mixamo互換FBXに自動エクスポート（ダブルクリック / .blend or .vrm のD&D）
 
 ## 会話のルール（Claude 向け）
 

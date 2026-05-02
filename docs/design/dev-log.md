@@ -22,6 +22,58 @@
 
 ---
 
+## 2026-05-02
+
+### やったこと
+
+- **Blender MCP × VRoidの練習セッション**
+    - Blender 5.1.1 起動済み + MCP接続済みの状態で、`Character_01_練習用.blend` をAI側からロード→中身を分析
+    - 構造把握: メッシュ3つ（Body 7,170v / Face 4,305v / Hair 18,690v）、アーマチュア94本（VRM 0.x命名: `J_Bip_*`）、表情シェイプキー58個
+    - Pythonスクリプト経由でポーズ操作・表情シェイプキー操作・カメラ自動配置・Eeveeレンダリングを実演（Neutral/Joy/Angry/Surprised の表情4枚を生成）
+- **VRM Add-on for Blender v3.26.8 を Blender 5.1.1 にインストール**
+    - Blender 4.2+ 用の **Extension版** ZIP を `bpy.ops.extensions.package_install_files` で導入
+    - `import_scene.vrm` / `export_scene.vrm` オペレータが使える状態に
+    - インストールパス: `%APPDATA%\Blender Foundation\Blender\5.1\extensions\user_default\vrm`
+- **Mixamo用 FBX 自動エクスポート機構を作成**（認知負荷削減）
+    - `scripts/export_for_mixamo.py` — `.blend` または `.vrm` を引数に取り、メッシュ＋アーマチュアのみ Mixamo互換設定（-Z forward / Y up / Leafボーン無し / テクスチャ同梱）でFBX出力
+    - `scripts/export_for_mixamo.bat` — ダブルクリックで練習用キャラを書き出し、ファイルをドラッグ&ドロップで他キャラも処理可
+    - 動作確認: `Character_01_練習用_for_mixamo.fbx` (3.62 MB) が正しく生成されることを確認
+- **役割分担の整理**（議論の結果として残しておく）
+    - **Blender が担当**: モデル形状・表情シェイプキー・FBX書き出し・ゲーム固有のシェイプキー量産（被弾顔等）
+    - **Blender が担当しない**: 体のアニメーション制作（Idle / Jab / Hook / 被弾 / KO 等）
+    - **Unity が担当**: ランタイムのIK・追従・ブレンディング（VR対戦相手は事前録画アニメだけだと無理。Unity Animation Rigging が主役）
+    - 結論: 当面 Blender アニメーション学習は不要。Mixamo + Unity Animation Rigging で進める
+
+### 詰まったところ
+
+- **`bpy.ops.export_scene.fbx(use_selection=True)` が `'Context' object has no attribute 'selected_objects'` で失敗**
+    - 原因: `wm.open_mainfile` 直後のコンテキストで `selected_objects` 属性が未定義になることがある（headless 寄りの状態）
+    - 解決: `bpy.context.temp_override(selected_objects=targets, active_object=arm, ...)` で明示的にコンテキストを上書きしてからオペレータ実行
+
+### 次やること（ユーザー側）
+
+1. Mixamo を開いて、前回アップロード済みのキャラクターを選択
+2. **boxing 系のアニメを 5〜8 本** Without Skin / FBX Binary / 60FPS でダウンロード
+3. 1ヶ所のフォルダにまとめて、そのフォルダパスをClaudeに渡す
+
+### 次やること（AI側、ユーザーから合図があったら）
+
+- 落としてきた anim FBX 群を Blender に一括インポート → 各 Action を NLA に Push → 全アクション入りの1個のFBXとして再エクスポートするスクリプトを作成・実行
+- これで Unity 側では `Character.fbx` 1つに `jab / hook / hit_react / idle` 等の AnimationClip がまとまった状態になる
+
+### メモ
+
+- Mixamo は公式の一括ダウンロードAPIなし。手作業 or ブラウザ自動操作（Claude in Chrome）の二択。今回は手作業推奨（プレビューで動きを確認しながら選んだ方が後悔が少ない）
+- 現フェーズ（ステップ1演出調整 → ステップ2前半）では Blender×MCP の出番は限定的。**ステップ2でキャラ追加 / 被弾シェイプキー量産 / リング・ジム環境のプロシージャル生成**などになると一気に効いてくる、という温度感
+- 試し書きしたVRMアドオンv3.26.8のリリースノート: VRM0/VRM1 のシェーダーノード周りバグ修正（2026-04-27 リリース）
+
+### 参考URL
+
+- VRM Add-on for Blender: https://github.com/saturday06/VRM-Addon-for-Blender
+- 今回入れたバージョン: https://github.com/saturday06/VRM-Addon-for-Blender/releases/tag/v3.26.8
+
+---
+
 ## 2026-04-27
 
 ### やったこと

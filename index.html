@@ -1373,7 +1373,7 @@
 <tbody>
 <tr>
 <td><strong>フェーズ</strong></td>
-<td>ステップ1 完了 → 演出・調整フェーズ</td>
+<td>ステップ1 完了 → 演出・調整フェーズ → <strong>ステップ2 着手</strong>（敵が殴り返してくる）</td>
 </tr>
 <tr>
 <td><strong>最終更新</strong></td>
@@ -1381,11 +1381,11 @@
 </tr>
 <tr>
 <td><strong>直近の動き</strong></td>
-<td>💥 HP/ダメージシステム実装、ヒットFXに強弱、エフェクト色4段階（緑→黄→橙→赤）、Thrill of the Fight 風速度計算（ピーク速度+方向補正）、体軸プレイヤー追従、拳ヒット後クールダウン</td>
+<td>🥊 Mixamoパンチ取り込み / EnemyAnimator自動生成 / 敵AIで定期パンチ発射 / EnemyFist + プレイヤー被弾判定 / PlayerHealthBoard / HMDシェイク / 赤ビネット → <strong>「殴り合い」が成立</strong></td>
 </tr>
 <tr>
 <td><strong>次のアクション</strong></td>
-<td>Mixamoでボクシング系アニメを5〜8本DL → NLA束ね / 消費カロリーUI / 拳の空切り音 / KO後リセットUI</td>
+<td>ガード判定 / 拳の IK 補正 / KO後リセットUI / 消費カロリー表示 / 拳の空切り音 / Hapticフィードバック</td>
 </tr>
 </tbody>
 </table>
@@ -1450,7 +1450,7 @@
 <td>2</td>
 <td>軽く動く／殴り返す相手</td>
 <td>1〜2ヶ月</td>
-<td>⚪ 未着手</td>
+<td>🟢 着手中（殴り返し実装済み）</td>
 </tr>
 <tr>
 <td>3</td>

@@ -22,6 +22,121 @@
 
 ---
 
+## 2026-05-03（その2）— 敵AI（パンチ撃ち返し） + プレイヤー被弾フィードバック
+
+### やったこと
+
+このセッションで「**プレイヤーが殴る → 敵が殴り返す → プレイヤー被弾 → ダメージ・揺れ・赤ビネット**」の双方向ループを完成。
+
+#### 1. Mixamo アニメインポートの自動化
+- `jab.fbx` / `hook.fbx` / `straight.fbx` を Mixamo からダウンロードして `Assets/_Project/Animations/` に配置
+- **`Assets/Editor/MixamoAnimImporter.cs`** 新規 — メニュー [VRBoxing > Configure Mixamo Animations]
+    - 4FBX 一括設定: Humanoid + Avatar Definition (boxing_Idle.fbx の Avatar をコピー)
+    - Loop Time: idle=ON、パンチ=OFF
+    - Root Transform 全 Bake Into Pose（その場再生）
+
+#### 2. EnemyAnimator Controller の自動生成
+- **`Assets/Editor/EnemyPunchAnimatorCreator.cs`** 新規
+    - メニュー [VRBoxing > Create Enemy Punch Animator] で Controller を1クリック生成
+    - パラメータ: Trigger "Punch" + Int "PunchType" (0=Jab, 1=Hook, 2=Straight)
+    - 構造: Idle (default) / Jab / Hook / Straight、Any State → 各 Punch、Punch → Idle (Exit Time 0.9)
+    - **重要**: Base Layer の `iKPass = true` を設定（HeadLookAtPlayer の OnAnimatorIK が呼ばれるように）
+    - メニュー [VRBoxing > Assign Enemy Animator] でキャラの Animator にアサイン
+
+#### 3. EnemyPunchController（敵 AI）
+- **`Assets/Scripts/EnemyPunchController.cs`** 新規
+    - 1.5〜3.5 秒ランダム間隔でパンチ発射、Jab/Hook/Straight を重み付き抽選
+    - スタミナ: max 100、1パンチ -20、毎秒 +15 回復、25未満で休憩
+    - KO 中（EnemyHealth.IsKnockedOut）はパンチ停止
+    - Editor [VRBoxing > Add Enemy Punch Controller] で1クリックアタッチ
+
+#### 4. プレイヤー側被弾判定
+- **`Assets/Scripts/PlayerHealth.cs`** — HP 200 デフォルト、TakeDamage で減算、KO 判定
+- **`Assets/Scripts/PlayerHitZone.cs`** — マーカー（Head / Body）
+- **`Assets/Editor/PlayerHitZoneSetup.cs`** — メニュー一発で Camera.main に PlayerHealth + 子に Sphere(Head)/Capsule(Body) 配置
+
+#### 5. 敵の拳（攻撃側コライダー）
+- **`Assets/Scripts/EnemyFist.cs`** — 拳ボーン追従の Trigger コライダー
+    - 速度ベースのダメージ（base 8 + speed×4、max 30）
+    - 1サイクルで1回しかヒットしない仕組み（hitThisCycle フラグ + Coordinator がリセット）
+- **`Assets/Scripts/EnemyFistsCoordinator.cs`** — Animator のステート見て、Punch (Jab/Hook/Straight) の進行度 0.15〜0.55 だけ拳を有効化
+    - Animation Event を仕込まずに「振り中だけ判定」を実現
+- **`Assets/Editor/EnemyFistsSetup.cs`** — 敵キャラの LeftHand/RightHand ボーンを名前検出 → 子に EnemyFist + BoneFollower 配置 + Coordinator アタッチ
+
+#### 6. 被弾フィードバック3点セット
+- **`Assets/Scripts/PlayerHealthBoard.cs`** — プレイヤーHP表示ボード（PunchCounter Billboard の左隣 -4,3,7）
+- **`Assets/Scripts/HMDShake.cs`** — 被弾時のカメラ揺れ
+- **`Assets/Scripts/HitVignette.cs`** — 視界の縁が赤くフェード（中央透明・外周赤の円形テクスチャ実行時生成）
+- **`Assets/Editor/HitFeedbackSetup.cs`** — 3つ一括メニュー [VRBoxing > Setup Hit Feedback (Board + Shake + Vignette)]
+
+#### 7. 表情リアクション（追加）
+- 既存の `HitFaceReaction.cs` に `baseExpression` (常時オン表情) フィールド追加 → 戦闘中の Angry 顔を実現
+
+### 詰まったところ
+
+- **被弾ログが出ない問題**: Console に `💢 プレイヤー被弾!` が出ない
+    - 原因1: ユーザーがシーン保存していなかった（Ctrl+S 押し忘れで .unity に書き戻されてなかった）→ シーンファイル直接 grep で確認
+    - 原因2: **Trigger イベントは「片方に Rigidbody」が必要**。EnemyFist と PlayerHitZone のどちらにも Rigidbody が無く、OnTriggerEnter が発火しなかった
+    - 解決: EnemyFist.Awake で Kinematic Rigidbody を自動付与（isKinematic=true, useGravity=false, ContinuousSpeculative）
+- **HMDShake で「被弾後にプレイヤーが空中に移動」する問題**
+    - 原因: Camera の親（Camera Offset）の localPosition を直接書き換えていた → VR Locomotion システムと競合してプレイヤー位置が浮く
+    - 解決: `Application.onBeforeRender` で **Camera 自身**に一時オフセットを加算する方式に変更
+        - HMD トラッキングが Camera を毎フレーム上書きするため、加算しても累積しない
+        - Camera Offset には一切手を出さないので Locomotion と完全に独立
+- **「軽く触れた」ログのスパム**: プレイヤーの拳が敵の拳コライダーに触れて誤判定
+    - 解決: PunchDetector で `other.GetComponent<EnemyFist>() != null` なら早期 return
+- **Animator Controller 自動生成で IK Pass が OFF だった**: HeadLookAtPlayer の OnAnimatorIK が呼ばれず、頭がプレイヤーを向かなくなった
+    - 解決: EnemyPunchAnimatorCreator で `controller.layers[0].iKPass = true` を明示
+
+### 双方向のループが完成
+
+| プレイヤー → 敵 | 敵 → プレイヤー |
+|---|---|
+| パンチ判定 (PunchDetector) | EnemyPunchController が定期発射 |
+| 部位別ダメージ (HitZone) | プレイヤー部位判定 (PlayerHitZone) |
+| 敵 HP 減算 (EnemyHealth) | プレイヤー HP 減算 (PlayerHealth) |
+| ボード表示 (EnemyHealthBoard) | ボード表示 (PlayerHealthBoard) |
+| のけぞり + 表情変化 | HMDシェイク + 赤ビネット |
+
+### 主要な追加スクリプト
+
+- `Assets/Scripts/PlayerHealth.cs`
+- `Assets/Scripts/PlayerHitZone.cs`
+- `Assets/Scripts/PlayerHealthBoard.cs`
+- `Assets/Scripts/EnemyPunchController.cs`
+- `Assets/Scripts/EnemyFist.cs`
+- `Assets/Scripts/EnemyFistsCoordinator.cs`
+- `Assets/Scripts/HMDShake.cs`
+- `Assets/Scripts/HitVignette.cs`
+- `Assets/Editor/MixamoAnimImporter.cs`
+- `Assets/Editor/EnemyPunchAnimatorCreator.cs`
+- `Assets/Editor/PlayerHitZoneSetup.cs`
+- `Assets/Editor/EnemyFistsSetup.cs`
+- `Assets/Editor/EnemyPunchControllerSetup.cs`
+- `Assets/Editor/HitFeedbackSetup.cs`
+
+### デバッグ手法のメモ
+
+- 「シーンに保存されているコンポーネント」を確認するには、`.unity` ファイルを GUID で grep するのが速い
+- スクリプトの GUID は `.cs.meta` の `guid:` 行から取得できる
+- 今回は `e7ec493d93c4e75449267fa8d8280838` (PlayerHealth) などで grep して、シーン未保存の状態を即特定できた
+
+### 次やること
+
+- **ガード判定**（プレイヤーの拳/前腕で敵パンチをブロック → ダメージ減）
+- **Hapticフィードバック**（Knuckles 振動、被弾時 + ヒット時）
+- **KO演出**（プレイヤー or 敵がKO時の処理。リセットUI）
+- **AI の高度化**（プレイヤー位置でステップイン、距離による狙い分け）
+- **拳に IK 補正**（プレイヤー頭部を狙う、Animation Rigging）
+- **キャロリー表示** UI
+
+### 参考
+
+- [Thrill of the Fight - Punch Power](https://steamcommunity.com/app/494150/discussions/0/1326718197225193613/) — 速度+方向補正+mass 倍率の元ネタ
+- Unity Trigger イベントの「片方に Rigidbody 必要」は VRゲーム系トラブルでよく遭遇
+
+---
+
 ## 2026-05-03 — HP/ダメージ + ヒットFX強弱 + Thrill of the Fight 風速度計算
 
 ### やったこと

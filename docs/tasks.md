@@ -13,8 +13,8 @@
 - [x] **2026-04-24** **キャラクターの待機アニメ適用**（VRoid → Blender でメッシュ書き出し → Mixamo で再リギング＆Idle DL → Unity で `Root Transform Rotation: Original + Bake Into Pose` で正面向き調整）🫁
 - [x] **2026-05-02** **VRM Add-on for Blender v3.26.8 を Blender 5.1.1 にインストール**（Extension版）
 - [x] **2026-05-02** **Mixamo用 FBX 自動エクスポート機構作成**（`scripts/export_for_mixamo.py` + `.bat`、ダブルクリックで書き出し / D&Dで他キャラ対応）
-- [ ] **Mixamoでボクシング系アニメを5〜8本 DL**（Without Skin / FBX Binary / 60FPS、1フォルダにまとめる）
-- [ ] **複数anim FBX → NLA → 1FBXへ統合スクリプト作成・実行**（DL完了後にAI側で）
+- [x] **2026-05-03** **Mixamoでボクシング系アニメをDL**（jab / hook / straight の3本、Without Skin / FBX Binary）
+- [~] **複数anim FBX → NLA → 1FBXへ統合スクリプト**（不要になった: Editor で Avatar Copy + 個別FBX保持の方式に変更）
 - [x] **2026-05-02** **パンチカウンター実装**（`PunchEvents` / `PunchCounter` / `Editor/PunchCounterCreator`、HUD/ビルボード/固定壁の3モード切替、リング後方の固定壁ビルボードを採用）
 - [x] **2026-05-02** **当たり判定を頭部・腹部に分割**（`HitZone` / `Editor/HitZoneSetup` でメニュー一発配置、ボーン名から自動検出）
 - [x] **2026-05-02** **コライダーをボーン追従**（`BoneFollower` を LateUpdate で適用、Animator 出力後に位置を上書き）
@@ -26,9 +26,21 @@
 - [x] **2026-05-03** **ヒットFXに強弱**（音量・ピッチ・パーティクル粒数を damage 相当値で変える）
 - [x] **2026-05-03** **エフェクト色の段階化**（intensity しきい値型 1=緑/2=黄/4=橙/6=赤、線形補間）
 - [x] **2026-05-03** **Thrill of the Fight 風速度計算**（ピーク速度 + 方向補正 45°/90°/×0.33）
+- [x] **2026-05-03** **Mixamoアニメ取り込み自動化**（`MixamoAnimImporter` で Humanoid + Avatar コピーを一括設定）— jab/hook/straight 取り込み完了
+- [x] **2026-05-03** **EnemyAnimator 自動生成**（`EnemyPunchAnimatorCreator`、Idle / Jab / Hook / Straight、IK Pass有効）
+- [x] **2026-05-03** **EnemyPunchController（敵AI）**（1.5〜3.5秒で Jab/Hook/Straight ランダム発射、スタミナ管理、KO中停止）
+- [x] **2026-05-03** **PlayerHealth + PlayerHitZone**（HMD直結の頭/体被弾判定、HP200）
+- [x] **2026-05-03** **EnemyFist + Coordinator**（拳の Trigger Collider を Punchステート進行度 0.15-0.55 で ON、Kinematic Rigidbody で Trigger 発火）
+- [x] **2026-05-03** **PlayerHealthBoard**（被弾フィードバックボード、リング左奥）
+- [x] **2026-05-03** **HMDシェイク**（`Application.onBeforeRender` で Camera 自身に加算、Locomotion と非競合）
+- [x] **2026-05-03** **赤ビネット**（HitVignette、Camera子に円形テクスチャ自動生成）
+- [x] **2026-05-03** **HitFaceReaction にベース表情**（戦闘中の Angry 顔常時、被弾で Sorrow が重なる）
 - [ ] **消費カロリー表示**（UI、PPMから推定）
 - [ ] **パンチ音**（拳が空を切る音、スゴ味）
 - [ ] **KO 後のリトライ／リセットUI**（現状は KO 表示だけで何も起きない）
+- [ ] **ガード判定**（プレイヤー拳/前腕で敵パンチをブロック、ダメージ減）
+- [ ] **拳の IK 補正**（敵パンチがプレイヤーの頭/体を狙う、Animation Rigging）
+- [ ] **AI 高度化**（距離管理・ステップイン・コンボ）
 
 ### ボクシング実装フェーズ（完了 ✅）
 
